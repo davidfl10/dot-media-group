@@ -2,20 +2,22 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export const SlideTabs = () => {
-  const [position, setPosition] = useState({
+type Position = { left: number; width: number; opacity: number };
+
+export const SlideTabs: React.FC = () => {
+  const [position, setPosition] = useState<Position>({
     left: 0,
     width: 0,
     opacity: 0,
   });
   // State to track the currently selected tab, defaulting to the first tab (index 0)
-  const [selected, setSelected] = useState(0);
-  const tabsRef = useRef([]);
+  const [selected, setSelected] = useState<number>(0);
+  const tabsRef = useRef<(HTMLLIElement | null)[]>([]);
 
   // This effect runs when the component mounts or when the selected tab changes.
   // It calculates the position of the selected tab and sets the cursor.
   useEffect(() => {
-    const selectedTab : any = tabsRef.current[selected];
+    const selectedTab = tabsRef.current[selected];
     if (selectedTab) {
       const { width } = selectedTab.getBoundingClientRect();
       setPosition({
@@ -47,7 +49,7 @@ export const SlideTabs = () => {
       {["Home", "Pricing", "Features", "Docs", "Blog"].map((tab, i) => (
          <Tab
             key={tab}
-            ref={(el) => (tabsRef.current[i] = el)}
+            ref={(el) => { tabsRef.current[i] = el; }}
             setPosition={setPosition}
             onClick={() => setSelected(i)}
           >
@@ -61,22 +63,41 @@ export const SlideTabs = () => {
 };
 
 // The Tab component is wrapped in forwardRef to accept a ref from its parent.
-const Tab = React.forwardRef(({ children, setPosition, onClick }, ref) => {
+type TabProps = {
+  children: React.ReactNode;
+  setPosition: React.Dispatch<React.SetStateAction<Position>>;
+  onClick: () => void;
+};
+
+const Tab = React.forwardRef<HTMLLIElement, TabProps>(({ children, setPosition, onClick }, ref) => {
+  const localRef = useRef<HTMLLIElement | null>(null);
+
+  // Sync the forwarded ref with the local ref so parent callbacks receive the element.
+  useEffect(() => {
+    if (!ref) return;
+    if (typeof ref === "function") {
+      ref(localRef.current);
+    } else {
+      try {
+        (ref as React.MutableRefObject<HTMLLIElement | null>).current = localRef.current;
+      } catch (e) {
+        // ignore if ref can't be assigned
+      }
+    }
+  }, [ref]);
+
+  const handleMouseEnter = () => {
+    const el = localRef.current;
+    if (!el) return;
+    const { width } = el.getBoundingClientRect();
+    setPosition({ left: el.offsetLeft, width, opacity: 1 });
+  };
+
   return (
     <li
-      ref={ref}
+      ref={localRef}
       onClick={onClick}
-      onMouseEnter={() => {
-        if (!ref?.current) return;
-
-        const { width } = ref.current.getBoundingClientRect();
-
-        setPosition({
-          left: ref.current.offsetLeft,
-          width,
-          opacity: 1,
-        });
-      }}
+      onMouseEnter={handleMouseEnter}
       className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-[#f4efe3] mix-blend-difference md:px-5 md:py-3 md:text-base"
     >
       {children}
@@ -85,7 +106,7 @@ const Tab = React.forwardRef(({ children, setPosition, onClick }, ref) => {
 });
 
 
-const Cursor = ({ position }) => {
+const Cursor: React.FC<{ position: Position }> = ({ position }) => {
   return (
     <motion.li
       animate={{
