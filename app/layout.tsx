@@ -1,18 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from 'next/font/local'
 import "./globals.css";
+import ThemeProvider from "@/context/ThemeContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+ 
+export const mainFont = localFont({
+  src: "../public/fonts/Catchy-Mager-Regular.ttf",
+  variable: "--font-main",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+export const secondaryFont = localFont({
+  src: "../public/fonts/alta-regular.otf",
+  variable: "--font-secondary",
+  display: "swap",
 });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "DOT Media Group",
 };
 
@@ -24,9 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${mainFont.variable} ${secondaryFont.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

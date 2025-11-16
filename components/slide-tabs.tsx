@@ -98,7 +98,7 @@ const Tab = React.forwardRef<HTMLLIElement, TabProps>(({ children, setPosition, 
       ref={localRef}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
-      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase text-[#f4efe3] mix-blend-difference md:px-5 md:py-3 md:text-base"
+      className="relative z-10 block cursor-pointer px-3 py-1.5 text-xs uppercase font-main text-[#f4efe3] mix-blend-difference md:px-5 md:py-3 md:text-base"
     >
       {children}
     </li>

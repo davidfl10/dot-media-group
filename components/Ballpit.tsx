@@ -76,9 +76,9 @@ class X {
   };
 
   render: () => void = this.#render.bind(this);
-  onBeforeRender: (state: { elapsed: number; delta: number }) => void = () => {};
-  onAfterRender: (state: { elapsed: number; delta: number }) => void = () => {};
-  onAfterResize: (size: SizeData) => void = () => {};
+  onBeforeRender: (state: { elapsed: number; delta: number }) => void = () => { };
+  onAfterRender: (state: { elapsed: number; delta: number }) => void = () => { };
+  onAfterResize: (size: SizeData) => void = () => { };
   isDisposed: boolean = false;
 
   constructor(config: XConfig) {
@@ -527,47 +527,38 @@ function createPointerData(options: Partial<PointerData> & { domElement: HTMLEle
     nPosition: new Vector2(),
     hover: false,
     touching: false,
-    onEnter: () => {},
-    onMove: () => {},
-    onClick: () => {},
-    onLeave: () => {},
+    onEnter: () => { },
+    onMove: () => { },
+    onClick: () => { },
+    onLeave: () => { },
     ...options
   };
   if (!pointerMap.has(options.domElement)) {
     pointerMap.set(options.domElement, defaultData);
-    if (!globalPointerActive) {
-      document.body.addEventListener('pointermove', onPointerMove as EventListener);
-      document.body.addEventListener('pointerleave', onPointerLeave as EventListener);
-      document.body.addEventListener('click', onPointerClick as EventListener);
+    // attach listeners to the specific DOM element (canvas) so global touches aren't intercepted
+    const el = options.domElement;
+    el.addEventListener('pointermove', onPointerMove as EventListener);
+    el.addEventListener('pointerleave', onPointerLeave as EventListener);
+    el.addEventListener('click', onPointerClick as EventListener);
 
-      document.body.addEventListener('touchstart', onTouchStart as EventListener, {
-        passive: false
-      });
-      document.body.addEventListener('touchmove', onTouchMove as EventListener, {
-        passive: false
-      });
-      document.body.addEventListener('touchend', onTouchEnd as EventListener, {
-        passive: false
-      });
-      document.body.addEventListener('touchcancel', onTouchEnd as EventListener, {
-        passive: false
-      });
-      globalPointerActive = true;
-    }
+    // attach touch events to the canvas; passive:false used only when preventDefault is necessary
+    el.addEventListener('touchstart', onTouchStart as EventListener, { passive: false });
+    el.addEventListener('touchmove', onTouchMove as EventListener, { passive: false });
+    el.addEventListener('touchend', onTouchEnd as EventListener, { passive: false });
+    el.addEventListener('touchcancel', onTouchEnd as EventListener, { passive: false });
   }
   defaultData.dispose = () => {
     pointerMap.delete(options.domElement);
-    if (pointerMap.size === 0) {
-      document.body.removeEventListener('pointermove', onPointerMove as EventListener);
-      document.body.removeEventListener('pointerleave', onPointerLeave as EventListener);
-      document.body.removeEventListener('click', onPointerClick as EventListener);
+    // remove listeners from the specific element
+    const el = options.domElement;
+    el.removeEventListener('pointermove', onPointerMove as EventListener);
+    el.removeEventListener('pointerleave', onPointerLeave as EventListener);
+    el.removeEventListener('click', onPointerClick as EventListener);
 
-      document.body.removeEventListener('touchstart', onTouchStart as EventListener);
-      document.body.removeEventListener('touchmove', onTouchMove as EventListener);
-      document.body.removeEventListener('touchend', onTouchEnd as EventListener);
-      document.body.removeEventListener('touchcancel', onTouchEnd as EventListener);
-      globalPointerActive = false;
-    }
+    el.removeEventListener('touchstart', onTouchStart as EventListener);
+    el.removeEventListener('touchmove', onTouchMove as EventListener);
+    el.removeEventListener('touchend', onTouchEnd as EventListener);
+    el.removeEventListener('touchcancel', onTouchEnd as EventListener);
   };
   return defaultData;
 }

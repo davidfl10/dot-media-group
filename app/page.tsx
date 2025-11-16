@@ -1,11 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import Ballpit from "@/components/Ballpit";
-import { SlideTabs } from "@/components/slide-tabs";
-import TextType from "@/components/TextType";
-import Image from "next/image";
+import { useTheme } from "@/context/ThemeContext";
+import { LiquidButton } from "@/components/liquid-glass-button";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 export default function Home() {
+  const { theme } = useTheme();
+  const logoSrc = theme === "black" ? "/logo/black.png" : "/logo/white.png";
+
   const [count, setCount] = useState<number>(() =>
     typeof window !== "undefined" && window.innerWidth <= 770 ? 50 : 100
   );
@@ -21,35 +25,34 @@ export default function Home() {
   }, [count]);
 
   return (
-    <div className="flex h-fit flex-col items-center justify-center font-sans bg-[#2b3745]">
+    <div className={`flex h-fit flex-col items-center justify-center ${theme === "black" ? 'bg-black' : 'bg-white'} `}>
       <main
-        className="flex relative min-h-screen w-full max-w-6xl flex-col items-center justify-center bg-[url(/logo.jpeg)] bg-center bg-no-repeat bg-contain"
+        className={`flex relative min-h-screen w-full flex-col items-center justify-center bg-center bg-no-repeat bg-contain`}
+        style={{ backgroundImage: `url(${logoSrc})` }}
       >
-        <div className="absolute top-5">
-          <SlideTabs />
+        {/* make the Ballpit visually visible but ignore pointer events so buttons stay clickable */}
+        <div className="absolute inset-0 z-0 ballpit-wrapper">
+          <Ballpit
+            count={count}
+            gravity={0.3}
+            friction={0.9}
+            wallBounce={0.95}
+            followCursor={false}
+            colors={["#0B5724", "#FAEBD7", "#2b3745"]}
+            lightIntensity={0.8}
+          />
         </div>
-        <Ballpit
-          count={count}
-          gravity={0.6}
-          friction={0.9}
-          wallBounce={0.95}
-          followCursor={false}
-          colors={["#3d85c6", "#FAEBD7", "#2b3745"]}
-          lightIntensity={0.8}
-        />
+
+        <Link href={'/home'} >
+          <LiquidButton
+            className="font-secondary absolute top-[25%] left-1/2 -translate-x-1/2 z-50 text-white pointer-events-auto"
+            aria-label="Choose your mood"
+          >
+            Choose your mood
+          </LiquidButton>
+        </Link>
       </main>
 
-      <section className="min-h-screen w-full flex items-center justify-center text-[#f4efe3]">
-        <TextType
-          text={["Welcome to DOT Media Group", "Let's start collaborate", "Build the future together"]}
-          typingSpeed={75}
-          pauseDuration={1500}
-          className="text-8xl"
-          showCursor={true}
-          cursorCharacter="_"
-        />
-      </section>
-
-    </div>
+    </div >
   );
 }
