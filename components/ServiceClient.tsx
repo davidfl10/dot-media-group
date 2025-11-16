@@ -54,13 +54,13 @@ export default function ServiceClient({
         >
           {packages.map((p) => (
             <SwiperSlide key={p.name} className="font-main">
-              <ElectricBorder
+              {/* <ElectricBorder
                 color="#13E857"
                 speed={1}
                 chaos={0.5}
                 thickness={2}
                 style={{ borderRadius: 16 }}
-              >
+              > */}
                 <div
                   className={`w-56 h-72 rounded-xl bg-[#0B5724] px-4 py-3 text-black shadow-lg ${isDark ? "bg-[#0B5724] text-white" : ""
                     }`}
@@ -73,7 +73,7 @@ export default function ServiceClient({
                     ))}
                   </ul>
                 </div>
-              </ElectricBorder>
+              {/* </ElectricBorder> */}
             </SwiperSlide>
           ))}
         </Swiper>

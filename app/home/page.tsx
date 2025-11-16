@@ -38,28 +38,28 @@ function HomePage() {
                 >
                     <Card>
                         <Link href="/services/consulting" className='font-secondary'>
-                            <h3 className='p-2'>Consulting</h3>
+                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Consulting</h3>
                             <div className='w-full bg-white h-0.5'></div>
                             <p className='p-2'>Your content here</p>
                         </Link>
                     </Card>
                     <Card>
                         <Link href="/services/digital-marketing" className='font-secondary'>
-                            <h3 className='p-2'>Digital Marketing</h3>
+                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Digital Marketing</h3>
                             <div className='w-full bg-white h-0.5'></div>
                             <p className='p-2'>Your content here</p>
                         </Link>
                     </Card>
                     <Card>
                         <Link href="/services/it-solutions" className='font-secondary'>
-                            <h3 className='p-2'>IT Solutions</h3>
+                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>IT Solutions</h3>
                             <div className='w-full bg-white h-0.5'></div>
                             <p className='p-2'>Your content here</p>
                         </Link>
                     </Card>
                     <Card>
                         <Link href="/services/ads-management" className='font-secondary'>
-                            <h3 className='p-2'>Ads Management</h3>
+                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Ads Management</h3>
                             <div className='w-full bg-white h-0.5'></div>
                             <p className='p-2'>Your content here</p>
                         </Link>

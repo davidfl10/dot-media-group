@@ -44,7 +44,7 @@ export const SlideTabs: React.FC = () => {
             });
         }
       }}
-      className="relative mx-auto flex w-fit rounded-full border-2 border-[#f4efe3] bg-[#2b3745] p-1"
+      className="relative mx-auto flex w-fit rounded-full border-2 border-[#f4efe3] bg-[#0B5724] p-1"
     >
       {["Home", "Pricing", "Features", "Docs", "Blog"].map((tab, i) => (
          <Tab
