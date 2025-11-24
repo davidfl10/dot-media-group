@@ -1,13 +1,13 @@
 "use client";
+import { useTheme } from '@/context/ThemeContext';
+// components
 import { SlideTabs } from '@/components/slide-tabs';
 import TextType from '@/components/TextType';
-import CardSwap, { Card } from "@/components/CardSwap";
-import { useTheme } from '@/context/ThemeContext';
-import Link from 'next/link';
+import CardSwiper from '@/components/CardSwiper';
+import ProjectForm from '@/components/ProjectForm';
 
 function HomePage() {
     const { theme } = useTheme();
-
 
     return (
         <div className={`flex w-full h-fit flex-col items-center justify-center ${theme === "black" ? 'bg-black' : 'bg-white'} `}>
@@ -16,7 +16,7 @@ function HomePage() {
                     <SlideTabs />
                 </div>
                 <TextType
-                    text={["Welcome to DOT MEDIA GROUP", "Let's start collaborate", "Build the future together"]}
+                    text={["Welcome to DOT MEDIA GROUP", "Let's start collaborating", "Build the future together"]}
                     typingSpeed={75}
                     pauseDuration={1500}
                     className={`font-main text-8xl text-center`}
@@ -26,11 +26,14 @@ function HomePage() {
             </section>
 
 
-            <div className={`min-h-screen max-w-6xl flex flex-wrap items-center justify-around ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'}`}>
+            <div className={`min-h-screen max-w-6xl flex flex-wrap items-center justify-center gap-20 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'}`}>
                 <div>
                     <h2 className='text-4xl font-main mb-6'>Our Services</h2>
                 </div>
-                <CardSwap
+                <div className='w-60 h-80'>
+                    <CardSwiper />
+                </div>
+                {/* <CardSwap
                     cardDistance={60}
                     verticalDistance={70}
                     delay={5000}
@@ -64,8 +67,15 @@ function HomePage() {
                             <p className='p-2'>Your content here</p>
                         </Link>
                     </Card>
-                </CardSwap>
+                </CardSwap> */}
             </div>
+
+            <section className={`min-h-screen max-w-6xl flex flex-col items-center justify-center ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
+                <div>
+                    <h2 className='text-4xl font-main mb-6'>Getting Started</h2>
+                </div>
+                <ProjectForm />
+            </section>
         </div>
     )
 }
