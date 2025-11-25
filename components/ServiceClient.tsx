@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
@@ -9,7 +10,8 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
-import { useRef, useState } from "react";
+
+// video
 
 type Package = { name: string; price: string; features: string[] };
 
@@ -30,12 +32,29 @@ export default function ServiceClient({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const swiperRef = useRef<SwiperType | null>(null);
 
+  const videoSrc = slug === "consulting" ? "/videos/red.mp4"
+    : slug == "digital-marketing" ? "/videos/blue.mp4"
+      : slug == "it-solutions" ? "/videos/green.mp4" : "/videos/umber.mp4";
+
+  console.log(videoSrc);
+
   return (
     <div
-      className={`flex w-full min-h-screen flex-col items-center justify-center ${isDark ? "bg-black text-white" : "bg-white text-black"
+      className={`relative flex w-full min-h-screen flex-col items-center justify-center ${isDark ? "bg-black text-white" : "bg-white text-black"
         }`}
     >
-      <section className="w-full max-w-6xl flex flex-col items-center gap-y-8">
+
+      <section className="relative z-10 w-full max-w-6xl flex flex-col items-center gap-y-8">
+        <video
+          autoPlay
+          className="fixed inset-0 w-full h-full object-cover pointer-events-none -z-10"
+          loop
+          muted
+          playsInline
+        >
+          <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
         <h1 className="text-4xl font-semibold font-main">{title}</h1>
 
         {/* custom pagination */}
@@ -51,12 +70,12 @@ export default function ServiceClient({
                   setCurrentIndex(i);
                 }}
                 className={`px-3 py-1 rounded-full text-xs font-secondary transition-colors ${i === currentIndex
-                    ? isDark
-                      ? "bg-white text-black"
-                      : "bg-black text-white"
-                    : isDark
-                      ? "bg-zinc-800 text-white/80"
-                      : "bg-gray-200 text-black"
+                  ? isDark
+                    ? "bg-white text-black"
+                    : "bg-black text-white"
+                  : isDark
+                    ? "bg-zinc-800 text-white/80"
+                    : "bg-gray-200 text-black"
                   }`}
               >
                 {p.name}
