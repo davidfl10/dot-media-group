@@ -19,6 +19,7 @@ const CardSwiper = () => {
             effect="cards"
             grabCursor={true}
             modules={[EffectCards]}
+            loop={true}
             className="w-full h-full"
         >
             {slides.map((slide) => (

@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mainFont.variable} ${secondaryFont.variable} antialiased`}
+        className={`${mainFont.variable} ${secondaryFont.variable} antialiased bg-black`}
       >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
