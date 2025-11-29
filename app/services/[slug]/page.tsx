@@ -7,13 +7,15 @@ type PackageItem = {
 };
 
 type ServiceData = {
-  color: string;
+  colorLight: string;  // for white theme
+  colorDark: string;   // for dark theme
   packages: PackageItem[];
 };
 
 const servicePackages: Record<string, ServiceData> = {
-  "consulting": {
-    color: "#662221",
+  consulting: {
+    colorDark: "#662221",
+    colorLight: "#C44D4D",
     packages: [
       { name: "START", price: "250$", features: ["Initial assessment", "Strategy session"] },
       { name: "GROWTH", price: "400-500$", features: ["Comprehensive plan", "Implementation support"] },
@@ -22,7 +24,8 @@ const servicePackages: Record<string, ServiceData> = {
     ]
   },
   "digital-marketing": {
-    color: "#041A2F",
+    colorDark: "#041A2F",
+    colorLight: "#93C6F6",
     packages: [
       { name: "STANDARD", price: "600$ + 250$", features: ["Social media setup", "Basic content creation", "22 posts/month"] },
       { name: "ADVANCED", price: "900$ + 300$", features: ["Comprehensive strategy", "Advanced content creation", "34 posts/month"] },
@@ -30,7 +33,8 @@ const servicePackages: Record<string, ServiceData> = {
     ]
   },
   "it-solutions": {
-    color: "#2A382B",
+    colorDark: "#2A382B",
+    colorLight: "#89CF80",
     packages: [
       { name: "BASIC", price: "500$", features: ["System assessment", "Basic setup"] },
       { name: "STANDARD", price: "800$", features: ["Customized solutions", "Ongoing support"] },
@@ -38,7 +42,8 @@ const servicePackages: Record<string, ServiceData> = {
     ]
   },
   "ads-management": {
-    color: "#31271E",
+    colorDark: "#31271E",
+    colorLight: "#704343",
     packages: [
       { name: "STANDARD", price: "250$ + ad spend", features: ["Ad setup", "Basic monitoring"] },
       { name: "ADVANCED", price: "400$ + ad spend", features: ["Comprehensive management", "Performance reports"] },
@@ -52,12 +57,11 @@ export default async function ServicePage({
 }: {
   params: Promise<{ slug: string }> | { slug: string };
 }) {
-  // await the params promise to unwrap it on the server
   const { slug } = await params;
   const service = servicePackages[slug];
-  const color = service?.color ?? "#0B5724";
+  const colorLight = service?.colorLight ?? "#662221";
+  const colorDark = service?.colorDark ?? "#0B5724";
   const packages = service?.packages ?? [];
 
-  // pass plain data to a client component (ServiceClient must be a "use client" component)
-  return <ServiceClient slug={slug} color={color} packages={packages} />;
+  return <ServiceClient slug={slug} colorLight={colorLight} colorDark={colorDark} packages={packages} />;
 }

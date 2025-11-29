@@ -11,15 +11,27 @@ function HomePage() {
 
     return (
         <div className={`flex w-full h-fit flex-col items-center justify-center ${theme === "black" ? 'bg-black' : 'bg-white'} `}>
-            <section className={`min-h-screen max-w-6xl flex flex-col items-center gap-y-32 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
+            <section className={`relative z-10 h-screen w-full flex flex-col items-center gap-y-32 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
+                <video
+                    autoPlay
+                    className="absolute inset-0 w-full h-full object-contain pointer-events-none -z-10"
+                    loop
+                    muted
+                    playsInline
+                >
+                    <source src="/videos/ivory.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+
                 <div className='mt-10 h-[20%]'>
                     <SlideTabs />
                 </div>
+
                 <TextType
                     text={["Welcome to DOT MEDIA GROUP", "Let's start collaborating", "Build the future together"]}
                     typingSpeed={75}
                     pauseDuration={1500}
-                    className={`font-main text-8xl text-center`}
+                    className={`font-main text-8xl text-center p-4 max-w-6xl`}
                     showCursor={true}
                     cursorCharacter="_"
                 />

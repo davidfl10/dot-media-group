@@ -5,15 +5,19 @@ import Link from 'next/link';
 // Swiper styles
 import "swiper/css";
 import "swiper/css/effect-cards";
+import { useTheme } from "@/context/ThemeContext";
 
-const slides = [
-    { id: 1, text: "Consulting", href: "consulting", color: "bg-[#662221]" },
-    { id: 2, text: "Digital Marketing", href: "digital-marketing", color: "bg-[#041A2F]" },
-    { id: 3, text: "IT Solutions", href: "it-solutions", color: "bg-[#2A382B]" },
-    { id: 4, text: "Ads Management", href: "ads-management", color: "bg-[#31271E]" },
-];
 
 const CardSwiper = () => {
+    const { theme } = useTheme();
+
+    const slides = [
+        { id: 1, text: "Consulting", href: "consulting", color: theme === "black" ? "bg-[#662221]" : "bg-[#C44D4D]" },
+        { id: 2, text: "Digital Marketing", href: "digital-marketing", color: theme === "black" ? "bg-[#041A2F]" : "bg-[#93C6F6]"},
+        { id: 3, text: "IT Solutions", href: "it-solutions", color: theme === "black" ? "bg-[#2A382B]" : "bg-[#89CF80]"},
+        { id: 4, text: "Ads Management", href: "ads-management", color: theme === "black" ? "bg-[#31271E]" : "bg-[#704343]"},
+    ];
+
     return (
         <Swiper
             effect="cards"
