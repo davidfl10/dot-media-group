@@ -27,7 +27,7 @@ export default function ServiceClient({
   const title = slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 
   const isDark = theme === "black";
-  const cardColor = isDark ? colorDark : colorLight;  
+  const cardColor = isDark ? colorDark : colorLight;
   console.log(cardColor);
   const img_bg = typeof window !== "undefined" && window.innerWidth <= 770 ? "cover" : "contain";
 
@@ -67,15 +67,14 @@ export default function ServiceClient({
                   swiperRef.current.slideTo(i);
                   setCurrentIndex(i);
                 }}
-                className={`px-3 py-1 rounded-full text-xs font-secondary transition-colors ${
-                  i === currentIndex
+                className={`px-3 py-1 rounded-full text-xs font-secondary transition-colors ${i === currentIndex
                     ? isDark
                       ? "bg-white text-black"
                       : "bg-black text-white"
                     : isDark
                       ? "bg-zinc-800 text-white/80"
                       : "bg-gray-200 text-black"
-                }`}
+                  }`}
               >
                 {p.name}
               </button>
@@ -117,8 +116,14 @@ export default function ServiceClient({
                 <h3 className="text-lg font-bold mb-1">{p.name}</h3>
                 <div className="text-sm opacity-80 mb-2">{p.price}</div>
                 <ul className="list-disc pl-5 text-sm space-y-1">
-                  {p.features.map((f) => (
-                    <li key={f}>{f}</li>
+                  {p.features.map((f, index) => (
+                    (index === 1 && currentIndex === 0 ? (
+                      <p className="filter blur-[2px]">
+                        <li key={f}>{f}</li>
+                      </p>
+                    ) : (
+                      <li key={f}>{f}</li>
+                    ))
                   ))}
                 </ul>
               </div>
