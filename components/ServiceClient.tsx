@@ -118,8 +118,8 @@ export default function ServiceClient({
                 <ul className="list-disc pl-5 text-sm space-y-1">
                   {p.features.map((f, index) => (
                     (index === 1 && currentIndex === 0 ? (
-                      <p className="filter blur-[2px]">
-                        <li key={f}>{f}</li>
+                      <p key={f} className="filter blur-[2px]">
+                        <li>{f}</li>
                       </p>
                     ) : (
                       <li key={f}>{f}</li>

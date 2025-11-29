@@ -1,5 +1,6 @@
 "use client";
 import { useTheme } from '@/context/ThemeContext';
+import Image from 'next/image';
 // components
 import { SlideTabs } from '@/components/slide-tabs';
 import TextType from '@/components/TextType';
@@ -12,16 +13,13 @@ function HomePage() {
     return (
         <div className={`flex w-full h-fit flex-col items-center justify-center ${theme === "black" ? 'bg-black' : 'bg-white'} `}>
             <section className={`relative z-10 h-screen w-full flex flex-col items-center gap-y-32 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
-                <video
-                    autoPlay
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none -z-10"
-                    loop
-                    muted
-                    playsInline
-                >
-                    <source src="/videos/ivory.mp4" type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>
+                <Image
+                    src="/videos/ivory.gif"
+                    width={500}
+                    height={500}
+                    className='absolute object-contain w-full h-full overflow-hidden -z-10'
+                    alt="Picture of the author"
+                />
 
                 <div className='mt-10 h-[20%]'>
                     <SlideTabs />
