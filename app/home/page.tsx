@@ -1,6 +1,7 @@
 "use client";
 import { useTheme } from '@/context/ThemeContext';
 import Image from 'next/image';
+import Script from "next/script";
 // components
 import { SlideTabs } from '@/components/slide-tabs';
 import TextType from '@/components/TextType';
@@ -12,27 +13,28 @@ function HomePage() {
 
     return (
         <div className={`flex w-full h-fit flex-col items-center justify-center ${theme === "black" ? 'bg-black' : 'bg-white'} `}>
-            <section className={`relative z-10 h-screen w-full flex flex-col items-center gap-y-32 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
-                <Image
-                    src="/videos/ivory.gif"
-                    width={500}
-                    height={500}
-                    className='absolute object-contain w-full h-full overflow-hidden -z-10'
-                    alt="Picture of the author"
+            <section className={`relative z-10 h-screen w-full flex flex-col items-center gap-y-32 overflow-hidden ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
+                <div
+                    data-us-project="NYOE7AACt1mZfgTuFSXp"
+                    className="absolute inset-0 -z-10 w-full h-full"
                 />
+
+                <Script
+                    src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.4/dist/unicornStudio.umd.js"
+                    strategy="afterInteractive"
+                    onLoad={() => {
+                        // @ts-ignore
+                        if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
+                            // @ts-ignore
+                            window.UnicornStudio.init();
+                        }
+                    }}
+                />
+
 
                 <div className='mt-10 h-[20%]'>
                     <SlideTabs />
                 </div>
-
-                <TextType
-                    text={["Welcome to DOT MEDIA GROUP", "Let's start collaborating", "Build the future together"]}
-                    typingSpeed={75}
-                    pauseDuration={1500}
-                    className={`font-main text-8xl text-center p-4 max-w-6xl`}
-                    showCursor={true}
-                    cursorCharacter="_"
-                />
             </section>
 
 
