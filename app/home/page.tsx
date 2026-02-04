@@ -1,6 +1,5 @@
 "use client";
 import { useTheme } from '@/context/ThemeContext';
-import Image from 'next/image';
 import Script from "next/script";
 // components
 import { SlideTabs } from '@/components/slide-tabs';
