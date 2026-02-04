@@ -16,6 +16,10 @@ function HomePage() {
                 <div
                     data-us-project="NYOE7AACt1mZfgTuFSXp"
                     className="absolute inset-0 -z-10 w-full h-full"
+                    data-us-lazyload="true"
+                    data-us-production="true"
+                    data-us-fps="30"
+                    data-us-scale="0.75"
                 />
 
                 <Script
@@ -37,49 +41,6 @@ function HomePage() {
             </section>
 
 
-            <div className={`min-h-screen max-w-6xl flex flex-wrap items-center justify-center gap-20 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'}`}>
-                <div>
-                    <h2 className='text-4xl font-main mb-6'>Our Services</h2>
-                </div>
-                <div className='w-60 h-80'>
-                    <CardSwiper />
-                </div>
-                {/* <CardSwap
-                    cardDistance={60}
-                    verticalDistance={70}
-                    delay={5000}
-                    pauseOnHover={false}
-                >
-                    <Card>
-                        <Link href="/services/consulting" className='font-secondary'>
-                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Consulting</h3>
-                            <div className='w-full bg-white h-0.5'></div>
-                            <p className='p-2'>Your content here</p>
-                        </Link>
-                    </Card>
-                    <Card>
-                        <Link href="/services/digital-marketing" className='font-secondary'>
-                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Digital Marketing</h3>
-                            <div className='w-full bg-white h-0.5'></div>
-                            <p className='p-2'>Your content here</p>
-                        </Link>
-                    </Card>
-                    <Card>
-                        <Link href="/services/it-solutions" className='font-secondary'>
-                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>IT Solutions</h3>
-                            <div className='w-full bg-white h-0.5'></div>
-                            <p className='p-2'>Your content here</p>
-                        </Link>
-                    </Card>
-                    <Card>
-                        <Link href="/services/ads-management" className='font-secondary'>
-                            <h3 className='p-2 bg-[#0B5724] rounded-t-xl'>Ads Management</h3>
-                            <div className='w-full bg-white h-0.5'></div>
-                            <p className='p-2'>Your content here</p>
-                        </Link>
-                    </Card>
-                </CardSwap> */}
-            </div>
 
             <section className={`min-h-screen max-w-6xl flex flex-col items-center justify-center ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}>
                 <div>
