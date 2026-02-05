@@ -16,6 +16,24 @@ export const secondaryFont = localFont({
   display: "swap",
 });
 
+export const jakartaFont = localFont({
+  src: "../public/fonts/PlusJakartaSans-VariableFont_wght.ttf",
+  variable: "--font-jakarta",
+  display: "swap",
+});
+
+export const frauncesFont = localFont({
+  src: "../public/fonts/Fraunces.ttf",
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+export const frauncesItalicFont = localFont({
+  src: "../public/fonts/Fraunces-Italic.ttf",
+  variable: "--font-fraunces-italic",
+  display: "swap",
+});
+
 const metadata: Metadata = {
   title: "DOT Media Group",
 };
@@ -28,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mainFont.variable} ${secondaryFont.variable} antialiased bg-black`}
+        className={`${mainFont.variable} ${secondaryFont.variable} ${jakartaFont.variable} ${frauncesFont.variable} ${frauncesItalicFont.variable} antialiased bg-black`}
       >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
