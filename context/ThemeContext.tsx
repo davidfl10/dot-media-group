@@ -12,7 +12,7 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>("white");
+  const [theme, setTheme] = useState<Theme>("black");
 
   useEffect(() => {
     const month = new Date().getMonth();
