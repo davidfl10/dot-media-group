@@ -1,14 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
-import Script from "next/script";
-import { useRouter } from "next/router";
-import Link from "next/link";
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
+import useServicesInformation from "@/lib/useServicesInformation";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 // components
-import Ballpit from "@/components/Ballpit";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LiquidButton } from "@/components/liquid-glass-button";
 import Navbar from "@/components/Navbar";
 import ScrollReveal from "@/components/text/ScrollReveal";
 import ServiceCard from "@/components/ServiceCard";
@@ -18,6 +14,8 @@ export default function Home() {
   const logoSrc = theme === "black" ? "/logo/black.png" : "/logo/white.png";
 
   const width = useWindowWidth();
+
+  const services = useServicesInformation().services;
 
   return (
     <main
@@ -108,17 +106,46 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <section className="h-1/2 max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
-          <div className="h-full max-w-[460px] flex flex-col items-start justify-center gap-6">
-            <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Our expertise</p>
-            <span className="font-fraunces text-white font-light text-[32px] leading-8">Engineering <span className="font-fraunces-italic text-white font-light text-[32px] leading-8">Influence</span></span> 
-            
-            <p className="text-[#787885] font-jakarta font-normal text-[16px] leading-6 tracking-[-0.32px]">
-              We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
-            </p>
+      <section className="lg:h-[80vh] h-auto max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+        <div className="lg:h-full h-[45%] max-w-[460px] flex flex-col items-start justify-center gap-6">
+          <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Our expertise</p>
+          <div className="lg:max-w-[320px] flex flex-wrap items-center gap-x-6 gap-y-2">
+            <span className="font-fraunces text-white font-light text-[32px] leading-8">Engineering</span>
+            <span className="font-fraunces-italic text-white font-light text-[32px] leading-8">Influence.</span>
           </div>
 
-          <ServiceCard />
+          <p className="text-[#787885] font-jakarta font-normal text-[16px] leading-6 tracking-[-0.32px]">
+            We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
+          </p>
+        </div>
+
+        <div className="lg:max-w-[1148px] w-full lg:h-full h-[45%] flex flex-wrap items-center justify-center gap-10">
+          <Swiper
+            slidesPerView={1.15}
+            centeredSlides={true}
+            spaceBetween={24}
+            grabCursor={true}
+            breakpoints={{
+              320: { slidesPerView: 1.05 },
+              480: { slidesPerView: 1.1 },
+              640: { slidesPerView: 1.15 },
+              1024: { slidesPerView: 1.5 },
+            }}
+            className="h-full w-full py-10 flex items-center justify-center"
+          >
+            {Object.values(services).map((service) => (
+              <SwiperSlide key={service.serviceName} className="h-full w-full flex items-center justify-center">
+                <ServiceCard
+                  key={service.serviceName}
+                  projectId={service.projectId}
+                  serviceName={service.serviceName}
+                  serviceDescription={service.serviceDescription}
+                  link={service.link}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </section>
 
     </main>
