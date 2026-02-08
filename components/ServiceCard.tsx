@@ -14,8 +14,7 @@ type ServiceCardProps = {
 export default function ServiceCard({ projectId, serviceName, serviceDescription, link }: ServiceCardProps) {
 
     return (
-        <div className="relative h-[400px] w-full max-w-[680px] overflow-hidden rounded-3xl border border-neutral-800 bg-black/70 backdrop-blur-2xl">
-
+        <div className="relative h-[400px] w-full max-w-[720px] overflow-hidden rounded-3xl border border-neutral-800 backdrop-blur-2xl">
             {/* WebGL Background */}
             <div
                 data-us-project={projectId}

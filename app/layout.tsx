@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${mainFont.variable} ${secondaryFont.variable} ${jakartaFont.variable} ${frauncesFont.variable} ${frauncesItalicFont.variable} antialiased bg-black`}
+        className={`${mainFont.variable} ${secondaryFont.variable} ${jakartaFont.variable} ${frauncesFont.variable} ${frauncesItalicFont.variable} antialiased bg-black overflow-x-hidden`}
       >
         <ThemeProvider>{children}</ThemeProvider>
       </body>

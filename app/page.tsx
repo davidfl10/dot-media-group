@@ -107,7 +107,7 @@ export default function Home() {
       </section>
 
       <section className="lg:h-[80vh] h-auto max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
-        <div className="lg:h-full h-[45%] max-w-[460px] flex flex-col items-start justify-center gap-6">
+        <div className="lg:h-full h-[45%] max-w-[460px] flex flex-col items-start justify-center gap-6 p-10">
           <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Our expertise</p>
           <div className="lg:max-w-[320px] flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="font-fraunces text-white font-light text-[32px] leading-8">Engineering</span>
@@ -119,29 +119,31 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="lg:max-w-[1148px] w-full lg:h-full h-[45%] flex flex-wrap items-center justify-center gap-10">
+        <div className="lg:max-w-[1148px] w-screen lg:h-full h-[45%] flex flex-wrap items-center justify-center mx-auto p-10 pr-0 lg:pr-10">
           <Swiper
             slidesPerView={1.15}
-            centeredSlides={true}
             spaceBetween={24}
+            slidesOffsetAfter={0}
             grabCursor={true}
             breakpoints={{
-              320: { slidesPerView: 1.05 },
-              480: { slidesPerView: 1.1 },
-              640: { slidesPerView: 1.15 },
-              1024: { slidesPerView: 1.5 },
+              320: { slidesPerView: 1.15, spaceBetween: 12 },
+              480: { slidesPerView: 1.15, spaceBetween: 12 },
+              640: { slidesPerView: 1.15, spaceBetween: 14 },
+              1024: { slidesPerView: 1.5, spaceBetween: 18, centeredSlidesBounds: false },
             }}
-            className="h-full w-full py-10 flex items-center justify-center"
+            className="w-full overflow-hidden px-4 py-6 lg:p-10"
           >
             {Object.values(services).map((service) => (
-              <SwiperSlide key={service.serviceName} className="h-full w-full flex items-center justify-center">
-                <ServiceCard
-                  key={service.serviceName}
-                  projectId={service.projectId}
-                  serviceName={service.serviceName}
-                  serviceDescription={service.serviceDescription}
-                  link={service.link}
-                />
+              <SwiperSlide key={service.serviceName} className="overflow-visible">
+                <div className={`rounded-[26px] ${service.borderColor}`}>
+                  <ServiceCard
+                    key={service.serviceName}
+                    projectId={service.projectId}
+                    serviceName={service.serviceName}
+                    serviceDescription={service.serviceDescription}
+                    link={service.link}
+                  />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
