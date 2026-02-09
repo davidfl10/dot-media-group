@@ -36,9 +36,7 @@ export default function CoverflowCarousel({
     const swiperRef = useRef<SwiperInstance | null>(null);
 
     const width = useWindowWidth();
-    console.log("screen: " + width);
     const imgWidth = 300;
-    console.log(imgWidth);
 
     return (
         <div
@@ -56,8 +54,8 @@ export default function CoverflowCarousel({
                 centeredSlides
                 slidesPerView="auto"
                 speed={600}
-                initialSlide={initialSlide} breakpoints={{
-                    
+                initialSlide={initialSlide} 
+                breakpoints={{
                     640: {
                         slidesPerView: "auto",
                         effect: "coverflow",

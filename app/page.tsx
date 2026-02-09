@@ -154,16 +154,16 @@ export default function Home() {
       </section> */}
 
       <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-20">
-        {/* <CoverflowCarousel
-          items={[
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" }
-          ]}
-          initialSlide={2}
-        /> */}
+          <CoverflowCarousel
+            items={[
+              { imageSrc: Logo, title: "Lorem" },
+              { imageSrc: Logo, title: "Lorem" },
+              { imageSrc: Logo, title: "Lorem" },
+              { imageSrc: Logo, title: "Lorem" },
+              { imageSrc: Logo, title: "Lorem" }
+            ]}
+            initialSlide={2}
+          />
       </section>
 
     </main>
