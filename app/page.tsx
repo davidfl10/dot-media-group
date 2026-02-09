@@ -22,13 +22,13 @@ export default function Home() {
 
   return (
     <main
-      className={`flex w-full min-h-screen flex-col justify-center items-center`}
+      className={`flex w-screen min-h-screen flex-col justify-center items-center`}
     >
       <section
-        className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-full max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
-      // style={{ backgroundImage: `url(${logoSrc})` }}
+        className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-screen max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
+        style={{ backgroundImage: `url(${logoSrc})` }}
       >
-        <div
+        {/* <div
           data-us-project="NYOE7AACt1mZfgTuFSXp"
           className="absolute inset-0 -z-10 w-full h-full"
           data-us-lazyload="true"
@@ -45,7 +45,7 @@ export default function Home() {
               window.UnicornStudio.init();
             }
           }}
-        />
+        /> */}
 
         <div className='mt-6 h-[10%]'>
           <Navbar />
@@ -80,7 +80,7 @@ export default function Home() {
 
 
 
-      <section className="h-screen w-full max-w-[1008px]">
+      <section className="h-screen w-screen max-w-[1008px]">
         <ScrollReveal
           baseOpacity={0.3}
           enableBlur
@@ -109,8 +109,8 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <section className="lg:h-[80vh] h-auto max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
-        <div className="lg:h-full h-[45%] max-w-[460px] flex flex-col items-start justify-center gap-6 p-10">
+      {/* <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+        <div className="lg:h-full h-[45%] max-w-screen flex flex-col items-start justify-center gap-6 p-10">
           <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Our expertise</p>
           <div className="lg:max-w-[320px] flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="font-fraunces text-white font-light text-[32px] leading-8">Engineering</span>
@@ -151,10 +151,10 @@ export default function Home() {
             ))}
           </Swiper>
         </div>
-      </section>
+      </section> */}
 
-      <section className="lg:h-[80vh] h-auto max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
-        <CoverflowCarousel
+      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-20">
+        {/* <CoverflowCarousel
           items={[
             { imageSrc: Logo, title: "Lorem" },
             { imageSrc: Logo, title: "Lorem" },
@@ -163,7 +163,7 @@ export default function Home() {
             { imageSrc: Logo, title: "Lorem" }
           ]}
           initialSlide={2}
-        />
+        /> */}
       </section>
 
     </main>

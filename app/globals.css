@@ -123,37 +123,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.ballpit-wrapper {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.ballpit-wrapper canvas {
-  pointer-events: auto; /* allow interaction with the canvas */
-  touch-action: none;    /* Ballpit expects this */
-}
-
-/* Keep interactive elements above the ballpit */
-.interactive-above-ballpit {
-  position: relative;
-  z-index: 50;
-  pointer-events: auto;
-}
-
-.mySwiper {
-  width: 100%;
-  padding-top: 50px;
-  padding-bottom: 50px;
-}
-
-.mySwiper .swiper-slide {
-  background-position: center;
-  background-size: cover;
-  width: 300px;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
