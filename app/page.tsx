@@ -19,6 +19,7 @@ export default function Home() {
   const width = useWindowWidth();
 
   const services = useServicesInformation().services;
+  console.log("testttt");
 
   return (
     <main
