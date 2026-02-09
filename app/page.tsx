@@ -2,12 +2,14 @@
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
+import Logo from "@/public/logo/black.png";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 // components
 import Navbar from "@/components/Navbar";
 import ScrollReveal from "@/components/text/ScrollReveal";
 import ServiceCard from "@/components/ServiceCard";
+import CoverflowCarousel from "@/components/carousel/CoverflowCarousel";
 
 export default function Home() {
   const { theme } = useTheme();
@@ -23,9 +25,9 @@ export default function Home() {
     >
       <section
         className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-full max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
-        style={{ backgroundImage: `url(${logoSrc})` }}
+      // style={{ backgroundImage: `url(${logoSrc})` }}
       >
-        {/* <div
+        <div
           data-us-project="NYOE7AACt1mZfgTuFSXp"
           className="absolute inset-0 -z-10 w-full h-full"
           data-us-lazyload="true"
@@ -42,7 +44,7 @@ export default function Home() {
               window.UnicornStudio.init();
             }
           }}
-        /> */}
+        />
 
         <div className='mt-6 h-[10%]'>
           <Navbar />
@@ -148,6 +150,19 @@ export default function Home() {
             ))}
           </Swiper>
         </div>
+      </section>
+
+      <section className="lg:h-[80vh] h-auto max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+        <CoverflowCarousel
+          items={[
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" }
+          ]}
+          initialSlide={2}
+        />
       </section>
 
     </main>
