@@ -3,6 +3,7 @@ import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
 import Logo from "@/public/logo/black.png";
+import Script from "next/script";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 // components
