@@ -308,11 +308,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     return (
         <div
-            className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
+            className={`sm-scope z-40 ${open ? 'h-screen' : 'h-24'} ${isFixed ? 'fixed top-0 left-0 w-screen overflow-hidden' : 'w-full h-full'}`}
         >
             <div
                 className={
-                    (className ? className + ' ' : '') + 'staggered-menu-wrapper pointer-events-none relative w-full h-full z-40'
+                    (className ? className + ' ' : '') + 'staggered-menu-wrapper pointer-events-auto relative w-full h-full z-40'
                 }
                 style={accentColor ? ({ ['--sm-accent' as any]: accentColor } as React.CSSProperties) : undefined}
                 data-position={position}
@@ -320,7 +320,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             >
                 <div
                     ref={preLayersRef}
-                    className="sm-prelayers absolute top-0 right-0 bottom-0 pointer-events-none z-5"
+                    className="sm-prelayers absolute top-0 right-0 bottom-0 pointer-events-auto z-5"
                     aria-hidden="true"
                 >
                     {(() => {
@@ -449,8 +449,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             </div>
 
             <style>{`
-.sm-scope .staggered-menu-wrapper { position: relative; width: 100%; height: 100%; z-index: 40; pointer-events: none; }
-.sm-scope .staggered-menu-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 2em; background: transparent; pointer-events: none; z-index: 20; }
+.sm-scope .staggered-menu-wrapper { position: relative; width: 100%; height: 100%; z-index: 40; pointer-events: auto; }
+.sm-scope .staggered-menu-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 2em; background: transparent; pointer-events: auto; z-index: 20; }
 .sm-scope .staggered-menu-header > * { pointer-events: auto; }
 .sm-scope .sm-logo { display: flex; align-items: center; user-select: none; }
 .sm-scope .sm-logo-img { display: block; height: 28px; width: auto; object-fit: contain; }

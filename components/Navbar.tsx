@@ -19,7 +19,7 @@ const Navbar = () => {
   return (
     <>
       {width && width < 750 ? (
-        <div style={{ height: '100vh', background: '#1a1a1a' }}>
+        <div className='h-screen w-screen'>
           <StaggeredMenu
             isFixed={true}
             position="right"

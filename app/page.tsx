@@ -19,7 +19,6 @@ export default function Home() {
   const width = useWindowWidth();
 
   const services = useServicesInformation().services;
-  console.log("testttt");
 
   return (
     <main
@@ -110,7 +109,7 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      {/* <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
         <div className="lg:h-full h-[45%] max-w-screen flex flex-col items-start justify-center gap-6 p-10">
           <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Our expertise</p>
           <div className="lg:max-w-[320px] flex flex-wrap items-center gap-x-6 gap-y-2">
@@ -152,19 +151,33 @@ export default function Home() {
             ))}
           </Swiper>
         </div>
-      </section> */}
+      </section>
+
+      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+        <div className="lg:h-full h-[45%] max-w-screen flex flex-col items-center justify-center gap-6 p-10">
+          <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Featured work</p>
+          <div className="lg:max-w-[320px] flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            <span className="font-fraunces text-white font-light text-[32px] leading-8">Trusted by brands</span>
+            <span className="font-fraunces-italic text-[#6B7280] font-light text-[32px] leading-8">that lead.</span>
+          </div>
+
+          <p className="text-[#787885] font-jakarta font-normal text-[16px] leading-6 tracking-[-0.32px]">
+            We help the best teams to succeed — from new startups to international companies.
+          </p>
+        </div>
+      </section>
 
       <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-20">
-          <CoverflowCarousel
-            items={[
-              { imageSrc: Logo, title: "Lorem" },
-              { imageSrc: Logo, title: "Lorem" },
-              { imageSrc: Logo, title: "Lorem" },
-              { imageSrc: Logo, title: "Lorem" },
-              { imageSrc: Logo, title: "Lorem" }
-            ]}
-            initialSlide={2}
-          />
+        <CoverflowCarousel
+          items={[
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" },
+            { imageSrc: Logo, title: "Lorem" }
+          ]}
+          initialSlide={2}
+        />
       </section>
 
     </main>
