@@ -11,6 +11,7 @@ import Navbar from "@/components/Navbar";
 import ScrollReveal from "@/components/text/ScrollReveal";
 import ServiceCard from "@/components/ServiceCard";
 import CoverflowCarousel from "@/components/carousel/CoverflowCarousel";
+import ProjectForm from "@/components/projectRequest/ProjectForm";
 
 export default function Home() {
   const { theme } = useTheme();
@@ -141,7 +142,7 @@ export default function Home() {
                 <div className={`rounded-[26px] ${service.borderColor}`}>
                   <ServiceCard
                     key={service.serviceName}
-                    projectId={service.projectId}
+                    projectId={"service.projectId"}
                     serviceName={service.serviceName}
                     serviceDescription={service.serviceDescription}
                     link={service.link}
@@ -178,6 +179,10 @@ export default function Home() {
           ]}
           initialSlide={2}
         />
+      </section>
+
+      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-10">
+        <ProjectForm />
       </section>
 
     </main>

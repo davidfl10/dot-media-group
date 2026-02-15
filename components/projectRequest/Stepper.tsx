@@ -25,8 +25,8 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
 export default function Stepper({
   children,
   initialStep = 1,
-  onStepChange = () => {},
-  onFinalStepCompleted = () => {},
+  onStepChange = () => { },
+  onFinalStepCompleted = () => { },
   stepCircleContainerClassName = '',
   stepContainerClassName = '',
   contentClassName = '',
@@ -130,11 +130,10 @@ export default function Stepper({
               {currentStep !== 1 && (
                 <button
                   onClick={handleBack}
-                  className={`duration-350 rounded px-2 py-1 transition ${
-                    currentStep === 1
+                  className={`duration-350 rounded px-2 py-1 transition ${currentStep === 1
                       ? 'pointer-events-none opacity-50 text-neutral-400'
                       : 'text-neutral-400 hover:text-neutral-700'
-                  }`}
+                    }`}
                   {...backButtonProps}
                 >
                   {backButtonText}
@@ -269,19 +268,19 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators =
     >
       <motion.div
         variants={{
-          inactive: { scale: 1, backgroundColor: '#222', color: '#a3a3a3' },
-          active: { scale: 1, backgroundColor: '#93C6F6', color: '#93C6F6' },
-          complete: { scale: 1, backgroundColor: '#93C6F6', color: '#93C6F6' }
+          inactive: { scale: 1, backgroundColor: 'rgba(255, 255, 255, 0.00)', border: '1px solid rgba(226, 232, 240, 0.16)', backdropFilter: 'blur(6px)' },
+          active: { scale: 1, backgroundColor: '#FFF', boxShadow: '0 0 8px 0 rgba(255, 255, 255, 0.24)' },
+          complete: { scale: 1, backgroundColor: 'rgba(255, 255, 255, 0.12)', border: '1px solid rgba(226, 232, 240, 0.32)', boxShadow: '0 0 8px 0 rgba(255, 255, 255, 0.24)', backdropFilter: 'blur(6px)' }
         }}
         transition={{ duration: 0.3 }}
         className="flex h-8 w-8 items-center justify-center rounded-full font-semibold"
       >
         {status === 'complete' ? (
-          <CheckIcon className="h-4 w-4 text-black" />
+          <span className="text-sm font-jakarta font-extrabold leading-100% tracking-[-0.24px] text-neutral-200">{step}</span>
         ) : status === 'active' ? (
-          <div className="h-3 w-3 rounded-full bg-[#060010]" />
+          <span className="text-sm font-jakarta font-extrabold leading-100% tracking-[-0.24px] text-neutral-900">{step}</span>
         ) : (
-          <span className="text-sm">{step}</span>
+          <span className="text-sm font-jakarta font-extrabold leading-100% tracking-[-0.24px] text-neutral-400">{step}</span>
         )}
       </motion.div>
     </motion.div>
@@ -294,12 +293,12 @@ interface StepConnectorProps {
 
 function StepConnector({ isComplete }: StepConnectorProps) {
   const lineVariants: Variants = {
-    incomplete: { width: 0, backgroundColor: 'bg-neutral-600' },
-    complete: { width: '100%', backgroundColor: '#93C6F6' }
+    incomplete: { width: 0, backgroundColor: '#262626' },
+    complete: { width: '100%', backgroundColor: '#E5E5E5' }
   };
 
   return (
-    <div className="relative mx-2 h-0.5 flex-1 overflow-hidden rounded bg-neutral-600">
+    <div className={`relative h-0.5 flex-1 overflow-hidden rounded ${isComplete ? 'bg-neutral-200' : 'bg-neutral-900'}`}>
       <motion.div
         className="absolute left-0 top-0 h-full"
         variants={lineVariants}
@@ -311,7 +310,7 @@ function StepConnector({ isComplete }: StepConnectorProps) {
   );
 }
 
-interface CheckIconProps extends React.SVGProps<SVGSVGElement> {}
+interface CheckIconProps extends React.SVGProps<SVGSVGElement> { }
 
 function CheckIcon(props: CheckIconProps) {
   return (
