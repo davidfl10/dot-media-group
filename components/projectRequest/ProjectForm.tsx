@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Stepper, { Step } from "./Stepper";
 import ServiceButton from "./serviceButton";
 
@@ -88,17 +88,19 @@ const ProjectForm = () => {
         email: ""
     });
 
+    const [step, setStep] = useState(1);
+    const handleNextRef = useRef<(() => void) | undefined>(undefined);
+
     return (
         <div className="flex w-full items-center justify-center p-10">
             <Stepper
-                initialStep={1}
-                className='w-80 text-white'
-                onStepChange={(step) => {
-                    console.log(step);
-                }}
+                initialStep={step}
+                className='w-[356px] py-8 px-6 lg:w-[560px] lg:py-12 lg:px-8 rounded-[20px] text-white'
+                onStepChange={(newStep) => setStep(newStep)}
                 onFinalStepCompleted={() => alert(`Thank you for your submission! We will get back to you soon.`)}
-                backButtonText="Previous"
-                nextButtonText="Next"
+                backButtonText="BACK"
+                nextButtonText="CONTINUE"
+                onNextStepRef={(fn) => { handleNextRef.current = fn; }}
             >
                 <Step>
                     <h2 className="font-fraunces text-white text-2xl text-center">I. Select a Solution</h2>
@@ -108,7 +110,11 @@ const ProjectForm = () => {
                             <ServiceButton
                                 key={solutionKey}
                                 text={solutionKey.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
-                                onClick={() => { setData({ ...data, solution: solutionKey, service: '', package: '' }) }}
+                                selected={data.solution === solutionKey}
+                                onClick={() => {
+                                    setData({ ...data, solution: solutionKey, service: '', package: '' });
+                                    if (handleNextRef.current) handleNextRef.current();
+                                }}
                             />
                         ))}
                     </div>
@@ -122,7 +128,11 @@ const ProjectForm = () => {
                                 <ServiceButton
                                     key={svcName}
                                     text={svcName}
-                                    onClick={() => { setData({ ...data, service: svcName, package: '' }) }}
+                                    selected={data.service === svcName}
+                                    onClick={() => {
+                                        setData({ ...data, service: svcName, package: '' });
+                                        if (handleNextRef.current) handleNextRef.current();
+                                    }}
                                 />
                             ))
                         ) : (
@@ -140,7 +150,11 @@ const ProjectForm = () => {
                                     key={pkg.name}
                                     text={pkg.name}
                                     price={pkg.price}
-                                    onClick={() => { setData({ ...data, package: pkg.name }) }}
+                                    selected={data.package === pkg.name}
+                                    onClick={() => {
+                                        setData({ ...data, package: pkg.name });
+                                        if (handleNextRef.current) handleNextRef.current();
+                                    }}
                                 />
                             ))
                         ) : (
@@ -149,12 +163,18 @@ const ProjectForm = () => {
                     </div>
                 </Step>
                 <Step>
-                    <h2>Tell us about your ideas</h2>
-                    <input className="p-2" value={data.details} onChange={(e) => setData({ ...data, details: e.target.value })} placeholder="What's on your mind?" />
+                    <div className="flex flex-col items-center justify-center gap-2 w-full">
+                        <h2 className="font-fraunces text-white text-2xl text-center">IV. Share Your Ideas</h2>
+                        <p className="font-jakarta text-sm text-neutral-400 text-center">A quick note is enough to get us started.</p>
+                        <input className="p-4 w-full min-h-40 bg-[#FFFFFF0A] border border-[#E2E8F02E] rounded-[20px] backdrop-blur-sm font-jakarta text-neutral-500 text-sm leading-5 tracking-[-0.28px]" value={data.details} onChange={(e) => setData({ ...data, details: e.target.value })} placeholder="| Describe your project, goals, timeline, or any specific requirements..." />
+                    </div>
                 </Step>
                 <Step>
-                    <h2>Final Step</h2>
-                    <input className="p-2" type="email" value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} placeholder="Your email address" />
+                    <div className="flex flex-col items-center justify-center gap-2 w-full">
+                        <h2 className="font-fraunces text-white text-2xl text-center">V. Share Your Email</h2>
+                        <p className="font-jakarta text-sm text-neutral-400 text-center mb-6">We'll send you a proposal shortly.</p>
+                        <input className="p-4 w-full h-full bg-[#FFFFFF0A] border border-[#E2E8F02E] rounded-[20px] backdrop-blur-sm font-jakarta text-neutral-500 text-sm leading-5 tracking-[-0.28px]" type="email" value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} placeholder="your-email@company.com" />
+                    </div>
                 </Step>
             </Stepper>
         </div>
