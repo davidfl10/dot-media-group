@@ -1,5 +1,10 @@
 import React, { useState, Children, useRef, useLayoutEffect, HTMLAttributes, ReactNode } from 'react';
 import { motion, AnimatePresence, Variants } from 'motion/react';
+import Image from 'next/image';
+// icons
+import arrowBack from "@/public/icons/arrow-back.svg";
+import arrowRight from "@/public/icons/arrow-right.svg";
+import arrowRightDarker from "@/public/icons/arrow-right-darker.svg";
 
 interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -23,6 +28,10 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   onNextStepRef?: (fn: () => void) => void;
 }
 
+interface StepperExtendedProps extends StepperProps {
+  isEmailValid?: boolean;
+}
+
 export default function Stepper({
   children,
   initialStep = 1,
@@ -39,8 +48,9 @@ export default function Stepper({
   disableStepIndicators = false,
   renderStepIndicator,
   onNextStepRef,
+  isEmailValid = true,
   ...rest
-}: StepperProps) {
+}: StepperExtendedProps) {
   const [currentStep, setCurrentStep] = useState<number>(initialStep);
   const [direction, setDirection] = useState<number>(0);
   const stepsArray = Children.toArray(children);
@@ -85,14 +95,13 @@ export default function Stepper({
 
   return (
     <div
-      className="flex min-h-full flex-1 flex-col items-center justify-center p-4 sm:aspect-[4/3] md:aspect-[2/1]"
+      className="flex min-h-full flex-1 flex-col items-center justify-center sm:aspect-[4/3] md:aspect-[2/1]"
       {...rest}
     >
       <div
-        className={`mx-auto w-full max-w-md rounded-4xl shadow-xl ${stepCircleContainerClassName}`}
-        style={{ border: '1px solid #222' }}
+        className={`mx-auto w-full rounded-[20px] shadow-xl ${stepCircleContainerClassName}`}
       >
-        <div className={`${stepContainerClassName} flex w-full items-center p-8`}>
+        <div className={`${stepContainerClassName} flex w-full lg:w-[80%] mx-auto items-center mb-10`}>
           {stepsArray.map((_, index) => {
             const stepNumber = index + 1;
             const isNotLastStep = index < totalSteps - 1;
@@ -128,33 +137,39 @@ export default function Stepper({
           isCompleted={isCompleted}
           currentStep={currentStep}
           direction={direction}
-          className={`space-y-2 px-8 ${contentClassName}`}
+          className={`${contentClassName}`}
         >
           {stepsArray[currentStep - 1]}
         </StepContentWrapper>
 
         {!isCompleted && (
-          <div className={`px-8 pb-8 ${footerClassName}`}>
-            <div className={`mt-10 flex w-full ${currentStep !== 1 ? 'justify-center gap-2' : 'justify-center'}`}>
+          <div className={` ${footerClassName}`}>
+            <div className={`flex w-full ${currentStep !== 1 ? 'justify-center gap-2' : 'justify-center'}`}>
               {currentStep !== 1 && (
                 <button
                   onClick={handleBack}
-                  className={`duration-350 w-1/2 lg:w-fit bg-[#FFFFFF0A] hover:bg-[#FFFFFF1A] rounded-full border border-[#E2E8F02E] px-2 py-1 transition ${currentStep === 1
+                  className={`flex items-center justify-center duration-350 w-1/2 lg:w-fit bg-[#FFFFFF0A] hover:bg-[#FFFFFF1A] rounded-full border border-[#E2E8F02E] p-2 lg:px-3 transition ${currentStep === 1
                     ? 'pointer-events-none opacity-50 text-neutral-400'
                     : 'text-neutral-400'
                     }`}
-                  {...backButtonProps}
-                >
-                  {backButtonText}
+                    {...backButtonProps}
+                    >
+                    <Image src={arrowBack} alt="Back" width={14} height={14} />
+                    <p className="font-jakarta ml-2 text-xs leading-3 font-normal uppercase tracking-[1.2px]">{backButtonText}</p>
                 </button>
               )}
               {currentStep >= 4 && (
                 <button
                   onClick={isLastStep ? handleComplete : handleNext}
-                  className="duration-350 w-1/2 flex items-center justify-center rounded-full bg-[#FFFFFF05] border border-[#FFFFFF14] py-1.5 px-3.5 font-medium tracking-tight text-[#FFFFFF33] transition hover:bg-[#F6E9DA] hover:text-neutral-800 active:bg-[#F6E9DA] active:text-neutral-900"
+                  className={
+                    "duration-350 w-1/2 lg:w-fit flex items-center justify-center gap-2 rounded-full bg-[#F6E9DA] text-neutral-900 border border-[#FFFFFF14] p-2 lg:px-3 font-medium tracking-tight transition hover:bg-[#F6E9DA] hover:text-neutral-800" +
+                    (isLastStep && !isEmailValid ? " opacity-50 pointer-events-none" : "")
+                  }
+                  disabled={isLastStep && !isEmailValid}
                   {...nextButtonProps}
                 >
-                  {nextButtonText}
+                  <p className="font-jakarta ml-2 text-xs leading-3 font-normal uppercase tracking-[1.2px]">{nextButtonText}</p>
+                  <Image src={arrowRightDarker} alt="Next" width={14} height={14} />
                 </button>
               )}
             </div>
@@ -251,7 +266,7 @@ interface StepProps {
 }
 
 export function Step({ children }: StepProps) {
-  return <div className="px-8">{children}</div>;
+  return <div className="w-full">{children}</div>;
 }
 
 interface StepIndicatorProps {

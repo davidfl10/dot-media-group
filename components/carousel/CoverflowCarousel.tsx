@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import useWindowWidth from "@/lib/useWindowWidth";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -34,27 +34,27 @@ export default function CoverflowCarousel({
     initialSlide = 2
 }: CoverflowCarouselProps) {
     const swiperRef = useRef<SwiperInstance | null>(null);
+    const [activeIndex, setActiveIndex] = useState(initialSlide);
 
-    const width = useWindowWidth();
     const imgWidth = 300;
 
     return (
         <div
             className={[
                 // matches body: center + black bg + white text + hidden overflow
-                "flex min-h-screen w-full items-center justify-center overflow-hidden bg-black text-white",
+                "min-h-screen w-full items-center justify-centeroverflow-x-hidden bg-black text-white",
                 wrapperClassName
             ].join(" ")}
         >
             <Swiper
                 modules={[EffectCoverflow, Pagination]}
-                className={["w-full py-[50px]", className].join(" ")}
+                className={["flex flex-col h-full w-full items-center justify-between py-[50px] ", className].join(" ")}
                 effect="coverflow"
                 grabCursor
                 centeredSlides
                 slidesPerView="auto"
                 speed={600}
-                initialSlide={initialSlide} 
+                initialSlide={initialSlide}
                 breakpoints={{
                     640: {
                         slidesPerView: "auto",
@@ -73,22 +73,20 @@ export default function CoverflowCarousel({
                 onSwiper={(swiper) => {
                     swiperRef.current = swiper;
                 }}
+                onSlideChange={(swiper) => {
+                    setActiveIndex(swiper.activeIndex);
+                }}
                 // same behavior: click a slide -> focus it
                 onClick={(swiper) => {
                     if (typeof swiper.clickedIndex === "number" && swiper.clickedIndex >= 0) {
                         swiper.slideTo(swiper.clickedIndex);
                     }
                 }}
-                // same CSS var behavior: --swiper-pagination-bottom: -2px
-                style={
-                    {
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        ["--swiper-pagination-bottom" as any]: "-2px"
-                    } as React.CSSProperties
-                }
+                // pagination positioning handled by absolute div below
+                style={{} as React.CSSProperties}
             >
                 {items.map((item, idx) => (
-                    <SwiperSlide key={idx} className="w-auto!">
+                    <SwiperSlide key={idx} className="w-auto! h-[80%] flex items-center justify-center">
                         {/* slide shell: width 320px, aspect 3/4, radius 14, border 1px yellow */}
                         <div className="relative w-[85vw] max-w-[320px] aspect-3/4 rounded-[14px] mx-auto border border-yellow-400">
                             <Image
@@ -96,7 +94,8 @@ export default function CoverflowCarousel({
                                 width={imgWidth}
                                 height={240}
                                 alt={item.alt ?? item.title}
-                                className="block h-full w-full select-none object-cover rounded-[14px]"
+                                className={`block h-full w-full select-none object-cover rounded-[14px] ${idx === activeIndex ? "blur-0" : "blur-[6px]"
+                                    } transition-all duration-300`}
                                 draggable={false}
                             />
 
@@ -116,8 +115,9 @@ export default function CoverflowCarousel({
                     </SwiperSlide>
                 ))}
 
-                <div className="swiper-pagination" />
+                <div className="swiper-pagination w-full mt-10" />
             </Swiper>
+
 
             {/* Global styles to preserve the exact CSS selectors you had:
           - .swiper-slide-active .title bottom/box-shadow change

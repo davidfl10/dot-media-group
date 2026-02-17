@@ -10,8 +10,14 @@ import 'swiper/css';
 import Navbar from "@/components/Navbar";
 import ScrollReveal from "@/components/text/ScrollReveal";
 import ServiceCard from "@/components/ServiceCard";
+import { LogoCloud } from "@/components/logoLoop/logo-cloud-3";
 import CoverflowCarousel from "@/components/carousel/CoverflowCarousel";
 import ProjectForm from "@/components/projectRequest/ProjectForm";
+// logos
+import Ambianta from "@/public/partners/ambianta.jpg";
+import BasarabsDance from "@/public/partners/basarabs-dance.jpg";
+import Biscottini from "@/public/partners/biscottini.png";
+import BrutariaBardar from "@/public/partners/brutaria-bardar.png";
 
 export default function Home() {
   const { theme } = useTheme();
@@ -21,9 +27,16 @@ export default function Home() {
 
   const services = useServicesInformation().services;
 
+  const imageLogos = [
+    { src: Ambianta, width: 120, height: 60, alt: "Ambianta" },
+    { src: BasarabsDance, width: 120, height: 60, alt: "Basarabs Dance" },
+    { src: Biscottini, width: 120, height: 60, alt: "Biscottini" },
+    { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar" },
+  ];
+
   return (
     <main
-      className={`flex w-screen min-h-screen flex-col justify-center items-center`}
+      className={`flex w-screen min-h-screen flex-col justify-center items-center overflow-hidden`}
     >
       <section
         className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-screen max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
@@ -154,10 +167,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-between flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
+      <section className="lg:h-[30vh] h-auto w-screen max-w-[1608px] flex items-center justify-center flex-wrap lg:flex-nowrap gap-10 p-5 mt-20">
         <div className="lg:h-full h-[45%] max-w-screen flex flex-col items-center justify-center gap-6 p-10">
-          <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase">Featured work</p>
-          <div className="lg:max-w-[320px] flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <p className="text-[#EED5B2] font-jakarta text-xs font-normal leading-3.5 tracking-[4.8px] uppercase ">Featured work</p>
+          <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-x-6 gap-y-2">
             <span className="font-fraunces text-white font-light text-[32px] leading-8">Trusted by brands</span>
             <span className="font-fraunces-italic text-[#6B7280] font-light text-[32px] leading-8">that lead.</span>
           </div>
@@ -167,6 +180,7 @@ export default function Home() {
           </p>
         </div>
       </section>
+      <LogoCloud className="mb-20" logos={imageLogos} />
 
       <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-20">
         <CoverflowCarousel
