@@ -2,7 +2,7 @@
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
-import Logo from "@/public/logo/black.png";
+import AstonMartin from "@/public/images/aston-martin.webp";
 import Script from "next/script";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -182,14 +182,26 @@ export default function Home() {
       </section>
       <LogoCloud className="mb-20" logos={imageLogos} />
 
-      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-20">
+      <section className="lg:h-[80vh] h-screen w-screen max-w-screen flex flex-col items-center justify-center mt-10 lg:mt-40">
+        <div className="flex w-full items-center justify-center lg:justify-between lg:px-20 mb-8">
+          <div className="flex flex-col items-center justify-center gap-2">
+            <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">Cinematography</p>
+            <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">Aston Martin</p>
+          </div>
+          {width && width > 850 && (
+            <div className="flex flex-col items-center justify-center gap-2">
+            <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">Year</p>
+            <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">2025</p>
+          </div>
+          )}
+        </div>
         <CoverflowCarousel
           items={[
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" },
-            { imageSrc: Logo, title: "Lorem" }
+            { imageSrc: AstonMartin, title: "Lorem" },
+            { imageSrc: AstonMartin, title: "Lorem" },
+            { imageSrc: AstonMartin, title: "Lorem" },
+            { imageSrc: AstonMartin, title: "Lorem" },
+            { imageSrc: AstonMartin, title: "Lorem" }
           ]}
           initialSlide={2}
         />
