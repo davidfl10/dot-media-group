@@ -2,7 +2,6 @@
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
-import AstonMartin from "@/public/images/aston-martin.webp";
 import Script from "next/script";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -13,6 +12,7 @@ import ServiceCard from "@/components/ServiceCard";
 import { LogoCloud } from "@/components/logoLoop/logo-cloud-3";
 import CoverflowCarousel from "@/components/carousel/CoverflowCarousel";
 import ProjectForm from "@/components/projectRequest/ProjectForm";
+import Footer from "@/components/Footer";
 // logos
 import Ambianta from "@/public/partners/ambianta.jpg";
 import BasarabsDance from "@/public/partners/basarabs-dance.jpg";
@@ -155,7 +155,7 @@ export default function Home() {
                 <div className={`rounded-[26px] ${service.borderColor}`}>
                   <ServiceCard
                     key={service.serviceName}
-                    projectId={"service.projectId"}
+                    projectId={service.projectId}
                     serviceName={service.serviceName}
                     serviceDescription={service.serviceDescription}
                     link={service.link}
@@ -180,36 +180,69 @@ export default function Home() {
           </p>
         </div>
       </section>
-      <LogoCloud className="mb-20" logos={imageLogos} />
+      <LogoCloud logos={imageLogos} />
 
-      <section className="lg:h-[80vh] h-screen w-screen max-w-screen flex flex-col items-center justify-center mt-10 lg:mt-40">
+      <section className="lg:h-[80vh] h-screen w-screen max-w-screen flex flex-col items-center justify-center mt-10">
         <div className="flex w-full items-center justify-center lg:justify-between lg:px-20 mb-8">
           <div className="flex flex-col items-center justify-center gap-2">
             <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">Cinematography</p>
-            <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">Aston Martin</p>
+            <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">Brutaria Bardar</p>
           </div>
           {width && width > 850 && (
             <div className="flex flex-col items-center justify-center gap-2">
-            <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">Year</p>
-            <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">2025</p>
-          </div>
+              <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">Year</p>
+              <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">2025</p>
+            </div>
           )}
         </div>
         <CoverflowCarousel
           items={[
-            { imageSrc: AstonMartin, title: "Lorem" },
-            { imageSrc: AstonMartin, title: "Lorem" },
-            { imageSrc: AstonMartin, title: "Lorem" },
-            { imageSrc: AstonMartin, title: "Lorem" },
-            { imageSrc: AstonMartin, title: "Lorem" }
+            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" }
           ]}
           initialSlide={2}
-        />
+        />    
       </section>
 
-      <section className="lg:h-[80vh] h-auto w-screen max-w-[1608px] flex items-center justify-center mt-10">
+      <section id="project-request" className="relative h-screen w-screen max-w-[1608px] flex flex-col items-center justify-center mt-10">
+        {/*
+        <div
+          data-us-project="ci8EUGRYBriwQrD4dFeV"
+          className="absolute inset-0 -z-10"
+          data-us-lazyload="true"
+          data-us-production="true"
+        />
+
+        
+         <Script
+          src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          strategy="afterInteractive"
+          onLoad={() => {
+            // @ts-ignore
+            if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
+              // @ts-ignore
+              window.UnicornStudio.init();
+            }
+          }}
+        />  */}
+
+        <div className="h-[20%] max-w-[800px] flex flex-col items-center justify-center gap-6 p-10 mt-[10%]">
+          <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-x-4 gap-y-2">
+            <span className="font-fraunces text-white text-center font-light text-[40px] lg:text-[70px] flex items-center justify-between gap-4">Let's build <span className="font-fraunces-italic text-right">the</span> </span>
+            <span className="font-fraunces-italic text-white lg:text-left font-light text-[40px] lg:text-[70px]">impossible.</span>
+          </div>
+
+          <p className="text-[#787885] font-jakarta font-normal text-center text-[16px] lg:text-[20px] leading-6 tracking-[-0.32px]">
+            You have a vision — We have  the creative firepower to realize it. Tell us about your project, and let's define the future of your brand.
+          </p>
+        </div>
         <ProjectForm />
       </section>
+
+      <Footer />
 
     </main>
 

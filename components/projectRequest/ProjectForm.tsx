@@ -163,7 +163,7 @@ const ProjectForm = () => {
     };
 
     return (
-        <div className="flex w-full items-center justify-center p-10">
+        <div className="flex h-[70%] w-full items-center justify-center p-10">
             {submittedData ? (
                 <div className="w-[356px] lg:w-[640px]">
                     <SuccessScreen data={submittedData} onNewRequest={handleReset} />
