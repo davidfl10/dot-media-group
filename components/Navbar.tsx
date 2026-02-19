@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
-    { label: 'Work', ariaLabel: 'Learn about us', link: '/' },
+    { label: 'Work', ariaLabel: 'Learn about us', link: '/work' },
     { label: 'Services', ariaLabel: 'View our services', link: '/' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/' }
   ];
@@ -38,11 +38,13 @@ const Navbar = () => {
         </div>
       ) : (
         <div className='inline-flex p-3 items-center justify-between lg:justify-normal gap-16 rounded-[110px] border-[1px] border-neutral-800 bg-[rgba(14, 14, 14, 0.70)]backdrop-blur-xl'>
-          <Image src={Logo} alt="Logo" width={logoWidth} height={logoHeight} />
+          <Link href="/">
+            <Image src={Logo} alt="Logo" width={logoWidth} height={logoHeight} />
+          </Link>
 
           {width && width > 750 && (
             <nav className='flex items-center justify-center'>
-              <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Work</a>
+              <a href="/work" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Work</a>
               <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Services</a>
               <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Contact</a>
             </nav>

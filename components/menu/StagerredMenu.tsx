@@ -348,14 +348,16 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                 >
                     <div className="sm-panel-frame">
                         <div className="sm-logo flex items-center select-none pointer-events-auto" aria-label="Logo">
-                            <Image
-                                src={Logo}
-                                alt="Logo"
-                                className="sm-logo-img block h-8 w-auto object-contain"
-                                draggable={false}
-                                width={82}
-                                height={24}
-                            />
+                            <Link href="/" aria-label="Home">
+                                <Image
+                                    src={Logo}
+                                    alt="Logo"
+                                    className="sm-logo-img block h-8 w-auto object-contain"
+                                    draggable={false}
+                                    width={82}
+                                    height={24}
+                                />
+                            </Link>
                         </div>
 
                         <div className="flex items-center justify-center gap-1">

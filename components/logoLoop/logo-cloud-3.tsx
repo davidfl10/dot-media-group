@@ -28,7 +28,8 @@ export function LogoCloud({ className, logos, ...props }: LogoCloudProps) {
                         <Image
                             alt={logo.alt}
                             className="pointer-events-none select-none dark:brightness-0 dark:invert"
-                            fill
+                            width={logo.width}
+                            height={logo.height}
                             src={logo.src}
                             style={{ objectFit: 'contain' }}
                         />

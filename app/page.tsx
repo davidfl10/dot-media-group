@@ -1,4 +1,6 @@
 "use client";
+import { useEffect, useState } from "react";
+import { getPartners, Partner } from "@/lib/notion";
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
@@ -14,9 +16,6 @@ import CoverflowCarousel from "@/components/carousel/CoverflowCarousel";
 import ProjectForm from "@/components/projectRequest/ProjectForm";
 import Footer from "@/components/Footer";
 // logos
-import Ambianta from "@/public/partners/ambianta.jpg";
-import BasarabsDance from "@/public/partners/basarabs-dance.jpg";
-import Biscottini from "@/public/partners/biscottini.png";
 import BrutariaBardar from "@/public/partners/brutaria-bardar.png";
 
 export default function Home() {
@@ -27,12 +26,23 @@ export default function Home() {
 
   const services = useServicesInformation().services;
 
-  const imageLogos = [
-    { src: Ambianta, width: 120, height: 60, alt: "Ambianta" },
-    { src: BasarabsDance, width: 120, height: 60, alt: "Basarabs Dance" },
-    { src: Biscottini, width: 120, height: 60, alt: "Biscottini" },
-    { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar" },
-  ];
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [imageLogos, setImageLogos] = useState<any[]>([
+    { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar1" },
+    { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar2" },
+    { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar3" }
+  ]);
+
+  useEffect(() => {
+    getPartners().then((partners) => {
+      setImageLogos(
+        partners
+          .filter((p) => p.logo)
+          .map((p) => ({ src: p.logo, width: 120, height: 60, alt: p.name }))
+      );
+      setPartners(partners);
+    });
+  }, []);
 
   return (
     <main
@@ -155,7 +165,7 @@ export default function Home() {
                 <div className={`rounded-[26px] ${service.borderColor}`}>
                   <ServiceCard
                     key={service.serviceName}
-                    projectId={service.projectId}
+                    projectId={"service.projectId"}
                     serviceName={service.serviceName}
                     serviceDescription={service.serviceDescription}
                     link={service.link}
@@ -197,14 +207,14 @@ export default function Home() {
         </div>
         <CoverflowCarousel
           items={[
-            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
-            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
-            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
-            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" },
-            { videoSrc: "/partners/brutariabardar/video-vertical1.mp4", title: "Video Production" }
+            { videoSrc: "/partners/brutariabardar/video1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video1.mp4", title: "Video Production" },
+            { videoSrc: "/partners/brutariabardar/video1.mp4", title: "Video Production" }
           ]}
           initialSlide={2}
-        />    
+        />
       </section>
 
       <section id="project-request" className="relative h-screen w-screen max-w-[1608px] flex flex-col items-center justify-center mt-10">
