@@ -44,7 +44,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
-    
+
     const splitText = useMemo(() => {
         const childrenArray = React.Children.toArray(children);
 
@@ -58,7 +58,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                 return (
                     <span className="line block overflow-hidden" key={lineIndex}>
                         <span className="line-inner inline-block">
-                            {words.map((word : any, wordIndex: any) => {
+                            {words.map((word: any, wordIndex: any) => {
                                 if (/^\s+$/.test(word)) return word;
                                 return (
                                     <span className="word inline-block" key={wordIndex}>
@@ -80,54 +80,49 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
         });
     }, [children]);
 
-    
+
     useEffect(() => {
         const el = containerRef.current;
         if (!el) return;
 
-        const scroller =
-            scrollContainerRef?.current ?? window;
-
-        // ROTATION (whole block)
-        gsap.fromTo(
-            el,
-            { rotate: baseRotation, transformOrigin: "0% 50%" },
-            {
-                rotate: 0,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: el,
-                    scroller,
-                    start: "top bottom",
-                    end: rotationEnd,
-                    scrub: scrubSpeed
-                }
-            }
-        );
+        const scroller = scrollContainerRef?.current ?? window;
 
         const lines = el.querySelectorAll<HTMLElement>(".line-inner");
         const words = el.querySelectorAll<HTMLElement>(".word");
 
+        // 1. Create a master timeline and PIN the container
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: el,
+                scroller,
+                pin: true, // Locks the section in place!
+                start: "center center", // Pins when the center of the element hits the center of the screen
+                end: "+=10%", // The "trap" distance. Increase to "+=200%" to make the scroll feel slower/longer.
+                scrub: scrubSpeed,
+            }
+        });
+
+        // 2. Add all animations to the timeline. 
+        // The "0" at the end of each line ensures they all start at the exact same time.
+
+        // ROTATION (whole block)
+        tl.fromTo(
+            el,
+            { rotate: baseRotation, transformOrigin: "0% 50%" },
+            { rotate: 0, ease: "none" },
+            0
+        );
+
         // LINE SLIDE UP (paragraph by paragraph)
-        gsap.fromTo(
+        tl.fromTo(
             lines,
             { yPercent: 100 },
-            {
-                yPercent: 0,
-                ease: "power2.out",
-                stagger: lineStagger,
-                scrollTrigger: {
-                    trigger: el,
-                    scroller,
-                    start: "top bottom-=20%",
-                    end: wordAnimationEnd,
-                    scrub: scrubSpeed
-                }
-            }
+            { yPercent: 0, ease: "power2.out", stagger: lineStagger },
+            0
         );
 
         // WORD OPACITY + BLUR
-        gsap.fromTo(
+        tl.fromTo(
             words,
             {
                 opacity: baseOpacity,
@@ -138,28 +133,20 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                 opacity: 1,
                 filter: "blur(0px)",
                 ease: "none",
-                stagger: {
-                    each: wordStagger
-                },
-                scrollTrigger: {
-                    trigger: el,
-                    scroller,
-                    start: "top bottom-=20%",
-                    end: wordAnimationEnd,
-                    scrub: scrubSpeed
-                }
-            }
+                stagger: { each: wordStagger }
+            },
+            0
         );
 
-        // CLEANUP (only this component’s triggers)
+        // CLEANUP
         return () => {
-            ScrollTrigger.getAll().forEach(trigger => {
-                if (trigger.trigger === el) {
-                    trigger.kill();
-                }
-            });
+            if (tl.scrollTrigger) {
+                tl.scrollTrigger.kill();
+            }
+            tl.kill();
         };
     }, [
+        children,
         scrollContainerRef,
         enableBlur,
         baseRotation,
@@ -167,8 +154,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
         blurStrength,
         lineStagger,
         wordStagger,
-        rotationEnd,
-        wordAnimationEnd
+        scrubSpeed
     ]);
 
     return (

@@ -110,7 +110,7 @@ export default function Home() {
           enableBlur
           baseRotation={2}
           blurStrength={9}
-          scrubSpeed={5}  // ← higher = slower/more lag. Try 2-5
+          scrubSpeed={5}
           containerClassName="h-full w-full flex flex-col items-center justify-around gap-7 px-3 pt-5 lg:p-0 lg:gap-14"
         >
           {width && width < 1000 && (
