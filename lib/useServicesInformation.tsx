@@ -15,7 +15,7 @@ const services: Record<string, ServiceCardProps> = {
         serviceName: "Consulting",
         serviceDescription:
             "We orchestrate full-spectrum social ecosystems: strategic planning, magnetic content creation, and active engagement — to transform passive audiences into loyal brand communities.",
-        link: "/services/consulting",
+        link: "/services?domain=0",
     },
     "Digital Marketing": {
         projectId: "6sPH4eBGAemz0aqAcYa4",
@@ -23,7 +23,7 @@ const services: Record<string, ServiceCardProps> = {
         serviceName: "Digital Marketing",
         serviceDescription:
             "We forge cohesive brand systems: from iconic logos to comprehensive brand manuals and packaging that communicate values instantly and memorably across every touchpoint.",
-        link: "/services/digital-marketing",
+        link: "/services?domain=1",
     },
     "Ads Management": {
         projectId: "IK8TF732RJLl2MOfsApO",
@@ -31,7 +31,7 @@ const services: Record<string, ServiceCardProps> = {
         serviceName: "Ads Management",
         serviceDescription:
             "Visuals that move and convert. We produce striking photography, cinematic videos, and immersive campaigns that capture attention, communicate essence, and spark engagement.",
-        link: "/services/ads-management",
+        link: "/services?domain=2",
     },
     "IT Solutions": {
         projectId: "Qm7JcoLU7gGJQRAKzKer",
@@ -39,7 +39,7 @@ const services: Record<string, ServiceCardProps> = {
         serviceName: "IT Solutions",
         serviceDescription:
             "Authority through storytelling. We design strategic content plans with persuasive copy, educational materials, and automated campaigns that position your brand as a trusted industry leader.",
-        link: "/services/it-solutions",
+        link: "/services?domain=3",
     },
 }
 

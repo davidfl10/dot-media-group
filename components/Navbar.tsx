@@ -13,7 +13,7 @@ const Navbar = () => {
   const menuItems = [
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'Work', ariaLabel: 'Learn about us', link: '/work' },
-    { label: 'Services', ariaLabel: 'View our services', link: '/' },
+    { label: 'Services', ariaLabel: 'View our services', link: '/services' },
     { label: 'Contact', ariaLabel: 'Get in touch', link: '/' }
   ];
 
@@ -45,7 +45,7 @@ const Navbar = () => {
           {width && width > 750 && (
             <nav className='flex items-center justify-center'>
               <a href="/work" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Work</a>
-              <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Services</a>
+              <a href="/services" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Services</a>
               <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Contact</a>
             </nav>
           )}

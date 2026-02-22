@@ -160,7 +160,7 @@ export default function Home() {
                 <div className={`rounded-[26px] ${service.borderColor}`}>
                   <ServiceCard
                     key={service.serviceName}
-                    projectId={"service.projectId"}
+                    projectId={service.projectId}
                     serviceName={service.serviceName}
                     serviceDescription={service.serviceDescription}
                     link={service.link}
