@@ -14,16 +14,22 @@ import playIcon from "@/public/icons/play-icon.svg";
 
 
 
-function ProjectCard({ partner, index, className, variant }: {
+function ProjectCard({ partner, index, className }: {
     partner: Partner;
     index: number;
     className?: string;
-    variant?: "large" | "small" | "wide";
 }) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hovered, setHovered] = useState(false);
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, margin: "-10%" });
+
+    // Autoplay when in view (handles mobile)
+    useEffect(() => {
+        if (inView && videoRef.current) {
+            videoRef.current.play().catch(() => { });
+        }
+    }, [inView]);
 
     const handleMouseEnter = () => {
         setHovered(true);
@@ -62,6 +68,7 @@ function ProjectCard({ partner, index, className, variant }: {
                         muted
                         loop
                         playsInline
+                        autoPlay
                         className={`
                             absolute inset-0 w-full h-full object-cover
                             transition-transform duration-700 group-hover:scale-105
@@ -92,7 +99,7 @@ function ProjectCard({ partner, index, className, variant }: {
                             initial={{ opacity: 0, y: 12 }}
                             animate={hovered ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
                             transition={{ duration: 0.25, ease: "easeOut" }}
-                            className="mt-4"
+                            className="mt-4 hidden lg:block"
                         >
                             <LiquidButton className="w-full lg:w-fit rounded-full px-4 py-3">
                                 <div className="w-full lg:w-fit flex flex-row items-center justify-center gap-3">
@@ -144,7 +151,7 @@ export default function Work() {
                     >
                         <span className="font-fraunces-italic text-white">Selected</span>
                         <br />
-                        <span className="text-white/90 ml-20 lg:ml-32">Works</span>
+                        <span className="bg-linear-to-b from-white to-[#535353] bg-clip-text text-transparent ml-20 lg:ml-32">Works</span>
                     </motion.h1>
 
                     <motion.p
@@ -193,10 +200,10 @@ export default function Work() {
                                     {c(0) && (
                                         <div className="flex flex-col lg:flex-row items-start gap-5">
                                             <div className="w-full h-[500px] lg:w-[55%] lg:h-[620px]">
-                                                {c(0) && <ProjectCard partner={c(0)} index={base + 0} variant="large" />}
+                                                {c(0) && <ProjectCard partner={c(0)} index={base + 0} />}
                                             </div>
                                             <div className="w-full h-[500px] lg:w-[45%] lg:h-[480px] lg:mt-[80px]">
-                                                {c(1) && <ProjectCard partner={c(1)} index={base + 1} variant="small" />}
+                                                {c(1) && <ProjectCard partner={c(1)} index={base + 1} />}
                                             </div>
                                         </div>
                                     )}
@@ -204,7 +211,7 @@ export default function Work() {
                                     {/* Row 2: 70% width, h-[500px], centered */}
                                     {c(2) && (
                                         <div className="w-full h-[500px] lg:w-[80%] lg:h-[676px] mx-auto">
-                                            <ProjectCard partner={c(2)} index={base + 2} variant="wide" />
+                                            <ProjectCard partner={c(2)} index={base + 2} />
                                         </div>
                                     )}
 
@@ -212,10 +219,10 @@ export default function Work() {
                                     {c(3) && (
                                         <div className="flex flex-col lg:flex-row items-start gap-5">
                                             <div className="w-full h-[500px] lg:w-[45%] lg:h-[540px]">
-                                                {c(3) && <ProjectCard partner={c(3)} index={base + 3} variant="small" />}
+                                                {c(3) && <ProjectCard partner={c(3)} index={base + 3} />}
                                             </div>
                                             <div className="w-full h-[500px] lg:w-[55%] lg:h-[680px] lg:mt-[80px]">
-                                                {c(4) && <ProjectCard partner={c(4)} index={base + 4} variant="large" />}
+                                                {c(4) && <ProjectCard partner={c(4)} index={base + 4} />}
                                             </div>
                                         </div>
                                     )}
@@ -223,7 +230,7 @@ export default function Work() {
                                     {/* Row 4: 85% width, h-[500px], centered */}
                                     {c(5) && (
                                         <div className="w-full h-[500px] lg:w-[90%] lg:h-[676px] mx-auto">
-                                            <ProjectCard partner={c(5)} index={base + 5} variant="wide" />
+                                            <ProjectCard partner={c(5)} index={base + 5} />
                                         </div>
                                     )}
 

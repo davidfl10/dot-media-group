@@ -24,6 +24,7 @@ interface ScrollRevealProps {
     wordAnimationEnd?: string;
     containerClassName?: string;
     textClassName?: string;
+    scrubSpeed?: number | boolean;
 }
 
 const ScrollReveal: React.FC<ScrollRevealProps> = ({
@@ -38,7 +39,8 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
     rotationEnd = "bottom bottom",
     wordAnimationEnd = "bottom bottom",
     containerClassName = "",
-    textClassName = ""
+    textClassName = "",
+    scrubSpeed = true
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -98,7 +100,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                     scroller,
                     start: "top bottom",
                     end: rotationEnd,
-                    scrub: true
+                    scrub: scrubSpeed
                 }
             }
         );
@@ -119,7 +121,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                     scroller,
                     start: "top bottom-=20%",
                     end: wordAnimationEnd,
-                    scrub: true
+                    scrub: scrubSpeed
                 }
             }
         );
@@ -144,7 +146,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
                     scroller,
                     start: "top bottom-=20%",
                     end: wordAnimationEnd,
-                    scrub: true
+                    scrub: scrubSpeed
                 }
             }
         );
@@ -170,7 +172,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
     ]);
 
     return (
-        <div ref={containerRef} className={`my-5 mx-0`}>
+        <div ref={containerRef} className={`my-5 mx-0 ${containerClassName}`}>
             <div className={`text-center text-neutral-50 self-stretch font-fraunces text-2xl lg:text-5xl leading-7 lg:leading-14 font-light tracking-[-0.48px] lg:tracking-[-0.96px] ${textClassName} ${containerClassName}`}>{splitText}</div>
         </div>
     );

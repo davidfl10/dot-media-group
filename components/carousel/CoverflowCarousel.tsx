@@ -133,6 +133,7 @@ export default function CoverflowCarousel({
                                 muted
                                 loop
                                 playsInline
+                                autoPlay
                                 className={`block w-full h-full select-none object-cover rounded-[20px] transition-all duration-300 ${idx === activeIndex ? "blur-0" : "blur-[6px]"
                                     }`}
                                 draggable={false}
@@ -199,7 +200,7 @@ export default function CoverflowCarousel({
             {/* ── DESKTOP controls ── */}
             <div className="hidden lg:flex w-full items-center justify-between px-20 mt-6">
                 <Link href="/work">
-                    <button className="flex items-center gap-1 bg-[#FFFFFF0A] hover:bg-[#FFFFFF1A] rounded-full border border-[#E2E8F02E] px-3 py-2 text-neutral-400 transition">
+                    <button className="flex items-center gap-1 bg-[#FFFFFF0A] hover:bg-[#FFFFFF1A] rounded-full border border-[#E2E8F02E] px-3 py-2 text-neutral-400 transition  cursor-pointer">
                         <p className="font-jakarta text-xs font-normal uppercase tracking-[1.2px]">All projects</p>
                         <Image src={arrowRight} alt="Arrow" width={14} height={14} />
                     </button>

@@ -110,26 +110,21 @@ export default function Home() {
           enableBlur
           baseRotation={2}
           blurStrength={9}
-          containerClassName="h-full w-full flex flex-col items-center gap-7 px-3 pt-5 lg:p-0 lg:gap-14"
+          scrubSpeed={5}  // ← higher = slower/more lag. Try 2-5
+          containerClassName="h-full w-full flex flex-col items-center justify-around gap-7 px-3 pt-5 lg:p-0 lg:gap-14"
         >
-          <p>
-            We are shaping the next generation of digital presence.
-          </p>
-          <p>
-            Not just creators, but thinkers, innovators, and collaborators.
-          </p>
-          <p>
-            Transforming ordinary online noise into strategy, clarity, and growth.
-          </p>
-          <p>
-            We design ecosystems where ideas evolve into influence.
-          </p>
-          <p>
-            Where brands rise beyond frameworks to inspire, engage, and lead.
-          </p>
-          <p>
-            Fueled by ambition. Defined by precision. Built for tomorrow.
-          </p>
+          {width && width < 1000 && (
+            <p>DOT Media Group is a premier global digital agency shaping the future of online presence.</p>
+          )}
+          {width && width < 1000 && (
+            <p>We fuse strategy, design, and innovation to create brands that define their industries.</p>
+          )}
+          <p>We are shaping the next generation of digital presence.</p>
+          <p>Not just creators, but thinkers, innovators, and collaborators.</p>
+          <p>Transforming ordinary online noise into strategy, clarity, and growth.</p>
+          <p>We design ecosystems where ideas evolve into influence.</p>
+          <p>Where brands rise beyond frameworks to inspire, engage, and lead.</p>
+          <p>Fueled by ambition. Defined by precision. Built for tomorrow.</p>
         </ScrollReveal>
       </section>
 
