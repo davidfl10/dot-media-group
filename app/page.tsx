@@ -213,26 +213,30 @@ export default function Home() {
       </section>
 
       <section id="project-request" className="relative h-screen w-screen max-w-[1608px] flex flex-col items-center justify-center mt-10">
-        {/*
-        <div
-          data-us-project="ci8EUGRYBriwQrD4dFeV"
-          className="absolute inset-0 -z-10"
-          data-us-lazyload="true"
-          data-us-production="true"
-        />
 
-        
-         <Script
-          src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
-          strategy="afterInteractive"
-          onLoad={() => {
-            // @ts-ignore
-            if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-              // @ts-ignore
-              window.UnicornStudio.init();
-            }
-          }}
-        />  */}
+        {width && width > 850 && (
+          <>
+            <div
+              data-us-project="GxA3xsXp539xHAR5y0Qp"
+              className="absolute inset-0 -z-10"
+              data-us-lazyload="true"
+              data-us-production="true"
+            />
+
+
+            <Script
+              src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+              strategy="afterInteractive"
+              onLoad={() => {
+                // @ts-ignore
+                if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
+                  // @ts-ignore
+                  window.UnicornStudio.init();
+                }
+              }}
+            />
+          </>
+        )}
 
         <div className="h-[20%] max-w-[800px] flex flex-col items-center justify-center gap-6 p-10 mt-[10%]">
           <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-x-4 gap-y-2">
