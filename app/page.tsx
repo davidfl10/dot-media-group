@@ -256,7 +256,7 @@ export default function Home() {
           })()}
           <CoverflowCarousel
             items={partners.slice(0, 5).map((p) => ({
-              videoSrc: "/partners/brutariabardar/video1.mp4",
+              videoSrc: p.mainVideo ?? "/partners/brutariabardar/video1.mp4",
               title: p.category ?? p.name,
             }))}
             initialSlide={2}
