@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { getPartners, Partner } from "@/lib/notion";
+import { useLoading } from "@/context/LoadingContext";
 import { useTheme } from "@/context/ThemeContext";
 import useWindowWidth from "@/lib/useWindowWidth";
 import useServicesInformation from "@/lib/useServicesInformation";
@@ -26,6 +27,8 @@ export default function Home() {
 
   const services = useServicesInformation().services;
 
+  const { registerLoading, startLoading } = useLoading();
+
   const [partners, setPartners] = useState<Partner[]>([]);
   const [carouselIndex, setCarouselIndex] = useState(2);
   const [imageLogos, setImageLogos] = useState<any[]>([
@@ -34,108 +37,58 @@ export default function Home() {
     { src: BrutariaBardar, width: 120, height: 60, alt: "Brutaria Bardar3" }
   ]);
 
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [fadeOut, setFadeOut] = useState(false);
-  const pendingRef = useRef(0);          // number of assets still loading
-  const resolvedRef = useRef(false);     // make sure we only resolve once
+  // Register the data fetch with the global loader — runs synchronously on render
+  // so the overlay stays visible until partners are resolved.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const partnersPromise = useMemo(() => {
+    const p = getPartners();
+    registerLoading(p);
+    return p;
+  }, []);
 
-  const assetLoaded = () => {
-    pendingRef.current -= 1;
-    if (pendingRef.current <= 0 && !resolvedRef.current) {
-      resolvedRef.current = true;
-      setFadeOut(true);
-      setTimeout(() => setIsLoaded(true), 600); // matches fade-out duration
-    }
-  };
-
-  // Register all known assets before the component paints
   useEffect(() => {
-    // Collect every <img> and <video> already in the DOM when partners load
-    const collect = () => {
-      const imgs = Array.from(document.querySelectorAll("img"));
-      const videos = Array.from(document.querySelectorAll("video"));
-
-      const assets = [...imgs, ...videos].filter((el) => {
-        if (el instanceof HTMLImageElement) return !el.complete;
-        if (el instanceof HTMLVideoElement) return el.readyState < 4; // HAVE_ENOUGH_DATA
-        return false;
-      });
-
-      if (assets.length === 0) {
-        // Nothing pending — resolve immediately
-        resolvedRef.current = true;
-        setFadeOut(true);
-        setTimeout(() => setIsLoaded(true), 600);
-        return;
-      }
-
-      pendingRef.current = assets.length;
-
-      assets.forEach((el) => {
-        if (el instanceof HTMLImageElement) {
-          el.addEventListener("load", assetLoaded, { once: true });
-          el.addEventListener("error", assetLoaded, { once: true }); // don't block on broken assets
-        } else if (el instanceof HTMLVideoElement) {
-          el.addEventListener("canplaythrough", assetLoaded, { once: true });
-          el.addEventListener("error", assetLoaded, { once: true });
-        }
-      });
-    };
-
-    // Wait for partners to arrive so their logos/videos are in the DOM
-    getPartners().then((fetchedPartners) => {
+    partnersPromise.then((fetchedPartners) => {
       setImageLogos(
         fetchedPartners
           .filter((p) => p.logo)
           .map((p) => ({ src: p.logo, width: 120, height: 60, alt: p.name }))
       );
       setPartners(fetchedPartners);
-
-      // Give React one tick to render the new assets, then collect
-      requestAnimationFrame(() => requestAnimationFrame(collect));
     });
+  }, [partnersPromise]);
 
-    // Safety net: never block the user for more than 5 seconds
-    const timeout = setTimeout(() => {
-      if (!resolvedRef.current) {
-        resolvedRef.current = true;
-        setFadeOut(true);
-        setTimeout(() => setIsLoaded(true), 600);
+  // On every mount (including client-side navigation back to this page),
+  // re-show the loading overlay and wait 1.8 s for Unicorn Studio WebGL
+  // assets to finish downloading and rendering before revealing the page.
+  useLayoutEffect(() => {
+    startLoading();
+    const unicornReady = new Promise<void>((resolve) => {
+      // @ts-ignore
+      if (window.UnicornStudio) {
+        // Script already in memory — destroy stale instances, re-init, then
+        // wait for assets to render before releasing the overlay.
+        // @ts-ignore
+        window.UnicornStudio.destroy?.();
+        // @ts-ignore
+        window.UnicornStudio.init();
+        setTimeout(resolve, 1800);
+      } else {
+        // First page load — onLoad on <Script> calls init().
+        // Resolve immediately; the partners data-fetch promise alone
+        // controls how long the overlay stays on first load.
+        resolve();
       }
-    }, 5000);
-
-    return () => clearTimeout(timeout);
+    });
+    registerLoading(unicornReady);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <>
-      {!isLoaded && (
-        <div
-          className={`fixed inset-0 z-9999 flex flex-col items-center justify-center bg-black transition-opacity duration-600 ${fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
-            }`}
-        >
-          {/* Logo */}
-          <img
-            src={logoSrc}
-            alt="DOT Media Group"
-            className="w-32 h-auto mb-8 opacity-90"
-          />
-
-          {/* Animated bar */}
-          <div className="w-48 h-px bg-white/10 rounded-full overflow-hidden">
-            <div className="h-full bg-white/70 rounded-full animate-loading-bar" />
-          </div>
-        </div>
-      )
-      }
-
-      <main
-        className={`flex w-screen min-h-screen flex-col justify-center items-center overflow-hidden`}
+    <main className="flex w-screen min-h-screen flex-col justify-center items-center overflow-hidden">
+      <section
+        className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-screen max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
+        style={{ backgroundImage: `url(${logoSrc})` }}
       >
-        <section
-          className={`bg-center bg-no-repeat bg-contain z-10 h-screen w-screen max-w-[1608px] flex flex-col items-center justify-between gap-y-16 ${theme === "black" ? 'text-[#f4efe3]' : 'text-[#000000]'} `}
-          style={{ backgroundImage: `url(${logoSrc})` }}
-        >
           {/* <div
           data-us-project="NYOE7AACt1mZfgTuFSXp"
           className="absolute inset-0 -z-10 w-full h-full"
@@ -226,6 +179,15 @@ export default function Home() {
           </div>
 
           <div className="lg:max-w-[1148px] w-screen lg:h-full h-[45%] flex flex-wrap items-center justify-center mx-auto p-10 pr-0 lg:pr-10">
+            {/* Load Unicorn Studio once here, after all ServiceCards are in the DOM */}
+            <Script
+              src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+              strategy="afterInteractive"
+              onLoad={() => {
+                // @ts-ignore
+                window.UnicornStudio?.init();
+              }}
+            />
             <Swiper
               grabCursor={true}
               breakpoints={{
@@ -343,8 +305,6 @@ export default function Home() {
 
         <Footer />
 
-      </main>
-
-    </>
+    </main>
   );
 }

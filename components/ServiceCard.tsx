@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { LiquidButton } from "./liquid-glass-button";
 import Link from "next/link";
 
@@ -17,27 +16,10 @@ export default function ServiceCard({ projectId, serviceName, serviceDescription
         <div className="relative h-[400px] w-full max-w-[720px] overflow-hidden rounded-3xl border border-neutral-800 backdrop-blur-2xl pr-2">
             {/* WebGL Background */}
             <div
-                data-us-project={"projectId"}
+                data-us-project={projectId}
                 className="absolute inset-0 -z-10"
-                data-us-lazyload="true"
                 data-us-production="true"
             />
-
-            {/* Unicorn Studio Script */}
-            <Script
-                src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
-                strategy="afterInteractive"
-                onLoad={() => {
-                    // @ts-ignore
-                    if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-                        // @ts-ignore
-                        window.UnicornStudio.init();
-                    }
-                }}
-            />
-
-            {/* Dark overlay for readability */}
-            {/* <div className="absolute inset-0 bg-black/40" /> */}
 
             {/* Content */}
             <div className="relative z-10 flex h-full flex-col justify-between p-8 text-white">

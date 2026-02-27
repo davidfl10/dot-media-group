@@ -44,6 +44,18 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-dot-wave: dot-wave 1.2s ease-in-out infinite;
+  --animate-logo-breathe: logo-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes dot-wave {
+  0%, 60%, 100% { transform: translateY(0);    opacity: 0.35; }
+  30%            { transform: translateY(-7px); opacity: 1;    }
+}
+
+@keyframes logo-breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1);    }
+  50%       { opacity: 1;   transform: scale(1.04); }
 }
 
 :root {

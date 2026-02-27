@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { getPartners, Partner } from "@/lib/notion";
+import { useLoading } from "@/context/LoadingContext";
 //components
 import { LiquidButton } from "@/components/liquid-glass-button";
 import Navbar from "@/components/Navbar";
@@ -120,16 +121,25 @@ function ProjectCard({ partner, index, className }: {
 
 
 export default function Work() {
+    const { registerLoading } = useLoading();
     const [partners, setPartners] = useState<Partner[]>([]);
     const heroRef = useRef(null);
     const heroInView = useInView(heroRef, { once: true });
 
+    // Register the data fetch with the global loader — runs synchronously on render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const partnersPromise = useMemo(() => {
+        const p = getPartners();
+        registerLoading(p);
+        return p;
+    }, []);
+
     useEffect(() => {
-        getPartners().then((partners) => {
-            const updatedPartners = partners.map((p) => ({ ...p, mainVideo: p.mainVideo || "/partners/brutariabardar/video1.mp4" }));
+        partnersPromise.then((fetchedPartners) => {
+            const updatedPartners = fetchedPartners.map((p) => ({ ...p, mainVideo: p.mainVideo || "/partners/brutariabardar/video1.mp4" }));
             setPartners(updatedPartners);
         });
-    }, []);
+    }, [partnersPromise]);
 
     return (
         <>
