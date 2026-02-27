@@ -28,6 +28,7 @@ type CoverflowCarouselProps = {
     className?: string;
     wrapperClassName?: string;
     initialSlide?: number;
+    onActiveIndexChange?: (index: number) => void;
 };
 
 export default function CoverflowCarousel({
@@ -35,6 +36,7 @@ export default function CoverflowCarousel({
     className = "",
     wrapperClassName = "",
     initialSlide = 2,
+    onActiveIndexChange,
 }: CoverflowCarouselProps) {
     const swiperRef = useRef<SwiperInstance | null>(null);
     const [activeIndex, setActiveIndex] = useState(initialSlide);
@@ -112,7 +114,10 @@ export default function CoverflowCarousel({
                     swiper.pagination.render();
                     swiper.pagination.update();
                 }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+                onSlideChange={(swiper) => {
+                    setActiveIndex(swiper.activeIndex);
+                    onActiveIndexChange?.(swiper.activeIndex);
+                }}
                 onClick={(swiper) => {
                     if (typeof swiper.clickedIndex === "number" && swiper.clickedIndex >= 0) {
                         swiper.slideTo(swiper.clickedIndex);

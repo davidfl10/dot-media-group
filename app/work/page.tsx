@@ -22,7 +22,7 @@ function ProjectCard({ partner, index, className }: {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hovered, setHovered] = useState(false);
     const ref = useRef(null);
-    const inView = useInView(ref, { once: true, margin: "-10%" });
+    const inView = useInView(ref, { once: true, margin: "0px 0px -2% 0px" });
 
     // Autoplay when in view (handles mobile)
     useEffect(() => {
@@ -49,9 +49,9 @@ function ProjectCard({ partner, index, className }: {
     return (
         <motion.div
             ref={ref}
-            initial={{ opacity: 0, y: 48 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: (index % 6) * 0.1 }}
+            initial={{ opacity: 0, y: 24 }}
+            animate={index < 3 || inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: (index % 6) * 0.05 }}
             className={`w-full h-full ${className || ""}`}
         >
             <Link href="#" className="w-full h-full block">
@@ -64,7 +64,7 @@ function ProjectCard({ partner, index, className }: {
                 >
                     <video
                         ref={videoRef}
-                        src={partner.mainVideo}
+                        src={inView ? partner.mainVideo : undefined}
                         muted
                         loop
                         playsInline

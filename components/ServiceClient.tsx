@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion, useInView } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode } from "swiper/modules";
@@ -21,7 +21,7 @@ export default function ServiceClient() {
   const heroInView = useInView(heroRef, { once: true });
 
   const width = useWindowWidth();
-
+  const isMobile = !!width && width < 1050;
   // Swiper refs
   const domainSwiperRef = useRef<SwiperType | null>(null);
   const descSwiperRef = useRef<SwiperType | null>(null);
@@ -33,11 +33,11 @@ export default function ServiceClient() {
 
   // active Domain index
   const domainParam = parseInt(searchParams.get("domain") || "0");
-  
+
   const [activeDomain, setActiveDomain] = useState(
     domainParam >= 0 && domainParam < DOMAIN_KEYS.length ? domainParam : 0
   );
-  
+
   // Sync swiper to initial domain on mount
   useEffect(() => {
     if (domainParam > 0) {
@@ -45,16 +45,17 @@ export default function ServiceClient() {
       descSwiperRef.current?.slideTo(domainParam);
     }
   }, []);
-  
+
   // Active indices
   const [activeService, setActiveService] = useState(0);
   const [activePackage, setActivePackage] = useState(0);
 
   const lang = "en";
-  const domainKey = DOMAIN_KEYS[activeDomain];
-  const service = servicePackages[lang][domainKey];
-  const serviceEntries = Object.entries(service.services);
+  const domainKey = useMemo(() => DOMAIN_KEYS[activeDomain], [activeDomain]);
+  const service = useMemo(() => servicePackages[lang][domainKey], [domainKey]);
+  const serviceEntries = useMemo(() => Object.entries(service.services), [service]);
   const activeServiceData = serviceEntries[activeService][1];
+  const buttonWidth = isMobile ? 60 : 100 / serviceEntries.length - 0.5;
 
   const handleDomainChange = (i: number) => {
     setActiveDomain(i);
@@ -108,7 +109,7 @@ export default function ServiceClient() {
           <motion.p
             key={`desc-${domainKey}`}
             initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
             transition={{ duration: 0.4, delay: 0.1 }}
             className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
             style={{ color: service.secondaryBg }}
@@ -156,7 +157,7 @@ export default function ServiceClient() {
                       ? "bg-white text-black border-white"
                       : "hover:bg-white/10 bg-transparent"
                       }`}
-                    style={i !== activeDomain ? { color: service.secondaryBgLight, opacity: 10 } : {}}
+                    style={i !== activeDomain ? { color: service.secondaryBgLight, opacity: 1 } : {}}
                   >
                     {d.name}
                   </button>
@@ -204,47 +205,47 @@ export default function ServiceClient() {
         }}>
 
         {/* ── Slider 2: Sub-service selector ── */}
-        <motion.div
-          key={`services-${domainKey}`}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="mb-12 w-full"
-        >
-          <Swiper
-            modules={[FreeMode]}
-            centeredSlides={width && width < 1050 ? true : false}
-            freeMode
-            slidesPerView="auto"
-            spaceBetween={8}
-            onSwiper={(s) => (serviceSwiperRef.current = s)}
-            className="w-full"
+        <AnimatePresence mode="wait">
+
+          <motion.div
+            key={domainKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+            className="mb-12 w-full"
           >
-            {serviceEntries.map(([name], i) => {
-              const buttonWidth = width && width < 1050 ? 60 : 100 / serviceEntries.length - 0.5;
-              return (
-                <SwiperSlide key={name} style={{ width: `${buttonWidth}%`, display: "flex", justifyContent: "space-between" }}>
-                  <button
-                    onClick={() => {
-                      handleServiceChange(i);
-                      serviceSwiperRef.current?.slideTo(i);
-                    }}
-                    className={`w-full bg-white/5 p-4 rounded-xl bacdrop-blur-[6px] cursor-pointer border border-white/20 text-xs lg:text-sm font-jakarta text-white tracking-[1.5px] uppercase transition-all duration-200 ${i === activeService
-                      ? "bg-white/30"
-                      : "hover:bg-white/10"
-                      }`}
-                    style={i === activeService ? { background: service.cardBg, opacity: 0.8 } : {}}
-                  >
-                    <div className="w-full flex flex-col items-center">
-                      <span className="text-xs">0{i + 1}</span>
-                      <p className="h-fit text-center">{name}</p>
-                    </div>
-                  </button>
-                </SwiperSlide>
-              )
-            })}
-          </Swiper>
-        </motion.div>
+            <Swiper
+              modules={[FreeMode]}
+              centeredSlides={isMobile}
+              freeMode
+              slidesPerView="auto"
+              spaceBetween={8}
+              onSwiper={(s) => (serviceSwiperRef.current = s)}
+              className="w-full"
+            >
+              {serviceEntries.map(([name], i) => {
+                return (
+                  <SwiperSlide key={name} style={{ width: `${buttonWidth}%`, display: "flex", justifyContent: "space-between" }}>
+                    <button
+                      onClick={() => {
+                        handleServiceChange(i);
+                        serviceSwiperRef.current?.slideTo(i);
+                      }}
+                      className={`w-full bg-white/5 p-4 rounded-xl bacdrop-blur-[6px] cursor-pointer border border-white/20 text-xs lg:text-sm font-jakarta text-white tracking-[1.5px] uppercase transition-all duration-200 ${i === activeService
+                        ? "bg-white/30"
+                        : "hover:bg-white/10"
+                        }`}
+                      style={i === activeService ? { background: service.cardBg, opacity: 0.8 } : {}}
+                    >
+                      <div className="w-full flex flex-col items-center">
+                        <span className="text-xs">0{i + 1}</span>
+                        <p className="h-fit text-center">{name}</p>
+                      </div>
+                    </button>
+                  </SwiperSlide>
+                )
+              })}
+            </Swiper>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Sub-service title + description */}
         <Swiper
@@ -281,7 +282,7 @@ export default function ServiceClient() {
         <div className="mb-6 w-full">
           <p className="font-fraunces text-[24px] lg:text-[48px] font-normal text-white mb-6">Available Packages</p>
           <Swiper
-            centeredSlides={width && width < 1050 ? true : false}
+            centeredSlides={isMobile}
             slidesPerView="auto"
             spaceBetween={16}
             onSwiper={(s) => (packageSwiperRef.current = s)}

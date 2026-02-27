@@ -14,10 +14,10 @@ type ServiceCardProps = {
 export default function ServiceCard({ projectId, serviceName, serviceDescription, link }: ServiceCardProps) {
 
     return (
-        <div className="relative h-[400px] w-full max-w-[720px] overflow-hidden rounded-3xl border border-neutral-800 backdrop-blur-2xl">
+        <div className="relative h-[400px] w-full max-w-[720px] overflow-hidden rounded-3xl border border-neutral-800 backdrop-blur-2xl pr-2">
             {/* WebGL Background */}
             <div
-                data-us-project={projectId}
+                data-us-project={"projectId"}
                 className="absolute inset-0 -z-10"
                 data-us-lazyload="true"
                 data-us-production="true"
