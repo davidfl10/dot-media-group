@@ -1,8 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
 
-export default function useWindowWidth(): number | undefined {
-  const [width, setWidth] = useState<number | undefined>(undefined);
+export default function useWindowWidth(): number {
+  const [width, setWidth] = useState<number>(
+    () => (typeof window !== 'undefined' ? window.innerWidth : 0)
+  );
 
   useEffect(() => {
     const update = () => setWidth(window.innerWidth);

@@ -22,12 +22,10 @@ export default function ServiceClient() {
   const heroInView = useInView(heroRef, { once: true });
 
   const width = useWindowWidth();
-  const isMobile = !!width && width < 1050;
+  const isMobile = width < 1050;
   // Swiper refs
   const domainSwiperRef = useRef<SwiperType | null>(null);
-  const descSwiperRef = useRef<SwiperType | null>(null);
   const serviceSwiperRef = useRef<SwiperType | null>(null);
-  const serviceDescSwiperRef = useRef<SwiperType | null>(null);
   const packageSwiperRef = useRef<SwiperType | null>(null);
 
   const searchParams = useSearchParams();
@@ -47,7 +45,6 @@ export default function ServiceClient() {
   useEffect(() => {
     if (domainParam > 0) {
       domainSwiperRef.current?.slideTo(domainParam);
-      descSwiperRef.current?.slideTo(domainParam);
     }
   }, []);
 
@@ -73,7 +70,6 @@ export default function ServiceClient() {
       setActiveDomain(i);
       setActiveService(0);
       setActivePackage(0);
-      descSwiperRef.current?.slideTo(i);
       serviceSwiperRef.current?.slideTo(0);
       packageSwiperRef.current?.slideTo(0);
       setIsLoading(false);
@@ -85,7 +81,6 @@ export default function ServiceClient() {
   const handleServiceChange = (i: number) => {
     setActiveService(i);
     setActivePackage(0);
-    serviceDescSwiperRef.current?.slideTo(i);
     packageSwiperRef.current?.slideTo(0);
   };
 
@@ -169,7 +164,7 @@ export default function ServiceClient() {
                       handleDomainChange(i);
                       domainSwiperRef.current?.slideTo(i);
                     }}
-                    className={`px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === selectedDomain
+                    className={`max-w-[190px] lg:max-w-none px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === selectedDomain
                       ? "bg-white text-black border-white"
                       : "hover:bg-white/10 bg-transparent"
                       }`}
@@ -188,34 +183,19 @@ export default function ServiceClient() {
       {/* ── Content area with loading overlay ── */}
       <div className="relative w-full">
         <div className="max-w-[980px] mx-auto px-6 lg:px-12 text-white">
-          <Swiper
-            slidesPerView={1}
-            onSwiper={(s) => (descSwiperRef.current = s)}
-            onSlideChange={(s) => {
-              handleDomainChange(s.realIndex);
-              domainSwiperRef.current?.slideTo(s.realIndex);
-            }}
-            className="w-full my-8 lg:my-[60px]"
-          >
-            {DOMAIN_KEYS.map((key) => {
-              const d = servicePackages[lang][key];
-              return (
-                <SwiperSlide key={key}>
-                  <div className="flex flex-col items-start lg:items-center lg:justify-center gap-4 px-4 text-center">
-                    <h1 className="text-white text-left lg:text-center font-fraunces font-normal text-[32px] lg:text-[64px]">
-                      {d.name}
-                    </h1>
-                    <p
-                      className="text-[16px] text-left lg:text-center font-normal font-jakarta leading-relaxed"
-                      style={{ color: d.secondaryBgLight }}
-                    >
-                      {d.description}
-                    </p>
-                  </div>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
+          <div className="w-full my-8 lg:my-[60px]">
+            <div className="flex flex-col items-start lg:items-center lg:justify-center gap-4 px-4 text-center">
+              <h1 className="text-white text-left lg:text-center font-fraunces font-normal text-[32px] lg:text-[64px]">
+                {service.name}
+              </h1>
+              <p
+                className="text-[16px] text-left lg:text-center font-normal font-jakarta leading-relaxed"
+                style={{ color: service.secondaryBgLight }}
+              >
+                {service.description}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="h-fit w-[90%] mx-auto flex flex-col items-start p-3 lg:p-10 mb-8 rounded-[20px] border border-white/10"
@@ -267,35 +247,17 @@ export default function ServiceClient() {
           </AnimatePresence>
 
           {/* Sub-service title + description */}
-          <Swiper
-            slidesPerView={1}
-            onSwiper={(s) => (serviceDescSwiperRef.current = s)}
-            onSlideChange={(s) => {
-              handleServiceChange(s.realIndex);
-              serviceSwiperRef.current?.slideTo(s.realIndex);
-            }}
-            className="w-full mb-12"
-          >
-            {serviceEntries.map(([name, data]) => (
-              <SwiperSlide key={name}>
-                <motion.div
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <h2 className="font-fraunces text-[28px] lg:text-[56px] text-white font-normal tracking-[-1px] mb-4">
-                    {name}
-                  </h2>
-                  <p
-                    className="font-jakarta text-[14px] md:text-[15px] leading-relaxed max-w-[640px]"
-                    style={{ color: service.secondaryBg }}
-                  >
-                    {data.description}
-                  </p>
-                </motion.div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <div className="w-full mb-12">
+            <h2 className="font-fraunces text-[28px] lg:text-[56px] text-white font-normal tracking-[-1px] mb-4">
+              {serviceEntries[activeService][0]}
+            </h2>
+            <p
+              className="font-jakarta text-[14px] md:text-[15px] leading-relaxed max-w-[640px]"
+              style={{ color: service.secondaryBg }}
+            >
+              {activeServiceData.description}
+            </p>
+          </div>
 
           {/* ── Slider 3: Packages ── */}
           <div className="mb-6 w-full">
@@ -317,10 +279,7 @@ export default function ServiceClient() {
                     packageSwiperRef.current?.slideTo(i);
                   }}
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: i * 0.08 }}
+                  <div
                     className={`h-full w-[320px] lg:w-[500px] flex flex-col rounded-[20px] bg-white/5 border border-white/10 p-5 lg:p-6 gap-2 cursor-pointer transition-all duration-300`}
                   >
                     {/* Package header */}
@@ -359,7 +318,7 @@ export default function ServiceClient() {
                         </li>
                       ))}
                     </ul>
-                  </motion.div>
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
