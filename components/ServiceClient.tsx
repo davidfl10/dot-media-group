@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -8,6 +8,7 @@ import type { Swiper as SwiperType } from "swiper";
 import { FreeMode } from "swiper/modules";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import LoadingOverlay from "./LoadingOverlay";
 import { servicePackages } from "@/lib/servicePackages";
 import useWindowWidth from "@/lib/useWindowWidth";
 
@@ -37,6 +38,10 @@ export default function ServiceClient() {
   const [activeDomain, setActiveDomain] = useState(
     domainParam >= 0 && domainParam < DOMAIN_KEYS.length ? domainParam : 0
   );
+  // selectedDomain updates immediately on click for visual tab feedback
+  const [selectedDomain, setSelectedDomain] = useState(activeDomain);
+  const [isLoading, setIsLoading] = useState(false);
+  const loadingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Sync swiper to initial domain on mount
   useEffect(() => {
@@ -57,14 +62,25 @@ export default function ServiceClient() {
   const activeServiceData = serviceEntries[activeService][1];
   const buttonWidth = isMobile ? 60 : 100 / serviceEntries.length - 0.5;
 
-  const handleDomainChange = (i: number) => {
-    setActiveDomain(i);
-    setActiveService(0);
-    setActivePackage(0);
-    descSwiperRef.current?.slideTo(i);
-    serviceSwiperRef.current?.slideTo(0);
-    packageSwiperRef.current?.slideTo(0);
-  };
+  const handleDomainChange = useCallback((i: number) => {
+    if (i === selectedDomain) return;
+    // Highlight tab immediately
+    setSelectedDomain(i);
+    setIsLoading(true);
+    // Cancel any in-flight timer
+    if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+    loadingTimerRef.current = setTimeout(() => {
+      setActiveDomain(i);
+      setActiveService(0);
+      setActivePackage(0);
+      descSwiperRef.current?.slideTo(i);
+      serviceSwiperRef.current?.slideTo(0);
+      packageSwiperRef.current?.slideTo(0);
+      setIsLoading(false);
+    }, 2000);
+  }, [selectedDomain]);
+
+  useEffect(() => () => { if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current); }, []);
 
   const handleServiceChange = (i: number) => {
     setActiveService(i);
@@ -153,11 +169,11 @@ export default function ServiceClient() {
                       handleDomainChange(i);
                       domainSwiperRef.current?.slideTo(i);
                     }}
-                    className={`px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === activeDomain
+                    className={`px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === selectedDomain
                       ? "bg-white text-black border-white"
                       : "hover:bg-white/10 bg-transparent"
                       }`}
-                    style={i !== activeDomain ? { color: service.secondaryBgLight, opacity: 1 } : {}}
+                    style={i !== selectedDomain ? { color: service.secondaryBgLight, opacity: 1 } : {}}
                   >
                     {d.name}
                   </button>
@@ -167,185 +183,204 @@ export default function ServiceClient() {
           </Swiper>
         </div>
 
-        <Swiper
-          slidesPerView={1}
-          onSwiper={(s) => (descSwiperRef.current = s)}
-          onSlideChange={(s) => {
-            handleDomainChange(s.realIndex);
-            domainSwiperRef.current?.slideTo(s.realIndex);
-          }}
-          className="w-full max-w-[980px] my-8 lg:my-[60px]"
-        >
-          {DOMAIN_KEYS.map((key) => {
-            const d = servicePackages[lang][key];
-            return (
-              <SwiperSlide key={key}>
-                <div className="flex flex-col items-start lg:items-center lg:justify-center gap-4 px-4 text-center">
-                  <h1 className="text-white text-left lg:text-center font-fraunces font-normal text-[32px] lg:text-[64px]">
-                    {d.name}
-                  </h1>
-                  <p
-                    className="text-[16px] text-left lg:text-center font-normal font-jakarta leading-relaxed"
-                    style={{ color: d.secondaryBgLight }}
-                  >
-                    {d.description}
-                  </p>
-                </div>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-
       </main>
 
-      <div className="h-fit w-[90%] mx-auto flex flex-col items-start p-3 lg:p-10 mb-8 rounded-[20px] border border-white/10"
-        style={{
-          background: `radial-gradient(135.36% 70.71% at 50% 50%, ${service.cardBg} 0%, rgba(0,0,0,0.60) 100%)`,
-          backdropFilter: "blur(26px)",
-        }}>
-
-        {/* ── Slider 2: Sub-service selector ── */}
-        <AnimatePresence mode="wait">
-
-          <motion.div
-            key={domainKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
-            className="mb-12 w-full"
-          >
-            <Swiper
-              modules={[FreeMode]}
-              centeredSlides={isMobile}
-              freeMode
-              slidesPerView="auto"
-              spaceBetween={8}
-              onSwiper={(s) => (serviceSwiperRef.current = s)}
-              className="w-full"
-            >
-              {serviceEntries.map(([name], i) => {
-                return (
-                  <SwiperSlide key={name} style={{ width: `${buttonWidth}%`, display: "flex", justifyContent: "space-between" }}>
-                    <button
-                      onClick={() => {
-                        handleServiceChange(i);
-                        serviceSwiperRef.current?.slideTo(i);
-                      }}
-                      className={`w-full bg-white/5 p-4 rounded-xl bacdrop-blur-[6px] cursor-pointer border border-white/20 text-xs lg:text-sm font-jakarta text-white tracking-[1.5px] uppercase transition-all duration-200 ${i === activeService
-                        ? "bg-white/30"
-                        : "hover:bg-white/10"
-                        }`}
-                      style={i === activeService ? { background: service.cardBg, opacity: 0.8 } : {}}
-                    >
-                      <div className="w-full flex flex-col items-center">
-                        <span className="text-xs">0{i + 1}</span>
-                        <p className="h-fit text-center">{name}</p>
-                      </div>
-                    </button>
-                  </SwiperSlide>
-                )
-              })}
-            </Swiper>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Sub-service title + description */}
-        <Swiper
-          slidesPerView={1}
-          onSwiper={(s) => (serviceDescSwiperRef.current = s)}
-          onSlideChange={(s) => {
-            handleServiceChange(s.realIndex);
-            serviceSwiperRef.current?.slideTo(s.realIndex);
-          }}
-          className="w-full mb-12"
-        >
-          {serviceEntries.map(([name, data]) => (
-            <SwiperSlide key={name}>
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <h2 className="font-fraunces text-[28px] lg:text-[56px] text-white font-normal tracking-[-1px] mb-4">
-                  {name}
-                </h2>
-                <p
-                  className="font-jakarta text-[14px] md:text-[15px] leading-relaxed max-w-[640px]"
-                  style={{ color: service.secondaryBg }}
-                >
-                  {data.description}
-                </p>
-              </motion.div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        {/* ── Slider 3: Packages ── */}
-        <div className="mb-6 w-full">
-          <p className="font-fraunces text-[24px] lg:text-[48px] font-normal text-white mb-6">Available Packages</p>
+      {/* ── Content area with loading overlay ── */}
+      <div className="relative w-full">
+        <div className="max-w-[980px] mx-auto px-6 lg:px-12 text-white">
           <Swiper
-            centeredSlides={isMobile}
-            slidesPerView="auto"
-            spaceBetween={16}
-            onSwiper={(s) => (packageSwiperRef.current = s)}
-            onSlideChange={(s) => setActivePackage(s.realIndex)}
-            className="w-full lg:w-[90%] max-w-h-[800px] h-fit"
+            slidesPerView={1}
+            onSwiper={(s) => (descSwiperRef.current = s)}
+            onSlideChange={(s) => {
+              handleDomainChange(s.realIndex);
+              domainSwiperRef.current?.slideTo(s.realIndex);
+            }}
+            className="w-full my-8 lg:my-[60px]"
           >
-            {activeServiceData.packages.map((pkg, i) => (
-              <SwiperSlide
-                key={pkg.name}
-                style={{ width: "auto" }}
-                onClick={() => {
-                  setActivePackage(i);
-                  packageSwiperRef.current?.slideTo(i);
-                }}
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className={`h-full w-[320px] lg:w-[500px] flex flex-col rounded-[20px] bg-white/5 border border-white/10 p-5 lg:p-6 gap-2 cursor-pointer transition-all duration-300`}
-                >
-                  {/* Package header */}
-                  <div className="flex flex-col gap-1 pb-4">
-                    <span
-                      className="font-jakarta text-[20px] lg:text-[36px] tracking-[2px]"
-                      style={{ color: service.secondaryBg }}
-                    >
-                      {pkg.name}
-                    </span>
+            {DOMAIN_KEYS.map((key) => {
+              const d = servicePackages[lang][key];
+              return (
+                <SwiperSlide key={key}>
+                  <div className="flex flex-col items-start lg:items-center lg:justify-center gap-4 px-4 text-center">
+                    <h1 className="text-white text-left lg:text-center font-fraunces font-normal text-[32px] lg:text-[64px]">
+                      {d.name}
+                    </h1>
                     <p
-                      className="font-fraunces text-sm font-normal mb-2"
-                      style={{ color: service.secondaryBgLight }}
+                      className="text-[16px] text-left lg:text-center font-normal font-jakarta leading-relaxed"
+                      style={{ color: d.secondaryBgLight }}
                     >
-                      {pkg.price}
+                      {d.description}
                     </p>
-                    <p className="font-jakarta text-[14px] text-white/50 leading-snug">{pkg.description}</p>
                   </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
 
-                  {/* Features */}
-                  <ul className="flex flex-col gap-3">
-                    {pkg.features.map((feature) => (
-                      <li key={feature.name} className={`${feature.enable !== undefined && feature.enable !== true ? 'blur-[2px]' : ''} flex flex-col gap-0.5`}>
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-1 h-1 rounded-full shrink-0"
-                            style={{ backgroundColor: service.secondaryBg }}
-                          />
-                          <span className="font-jakarta text-[13px] text-white/90 font-medium">
-                            {feature.name}
-                          </span>
+        <div className="h-fit w-[90%] mx-auto flex flex-col items-start p-3 lg:p-10 mb-8 rounded-[20px] border border-white/10"
+          style={{
+            background: `radial-gradient(135.36% 70.71% at 50% 50%, ${service.cardBg} 0%, rgba(0,0,0,0.60) 100%)`,
+            backdropFilter: "blur(26px)",
+          }}>
+
+          {/* ── Slider 2: Sub-service selector ── */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={domainKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="mb-12 w-full"
+            >
+              <Swiper
+                modules={[FreeMode]}
+                centeredSlides={isMobile}
+                freeMode
+                slidesPerView="auto"
+                spaceBetween={8}
+                onSwiper={(s) => (serviceSwiperRef.current = s)}
+                className="w-full"
+              >
+                {serviceEntries.map(([name], i) => {
+                  return (
+                    <SwiperSlide key={name} style={{ width: `${buttonWidth}%`, display: "flex", justifyContent: "space-between" }}>
+                      <button
+                        onClick={() => {
+                          handleServiceChange(i);
+                          serviceSwiperRef.current?.slideTo(i);
+                        }}
+                        className={`w-full bg-white/5 p-4 rounded-xl bacdrop-blur-[6px] cursor-pointer border border-white/20 text-xs lg:text-sm font-jakarta text-white tracking-[1.5px] uppercase transition-all duration-200 ${i === activeService
+                          ? "bg-white/30"
+                          : "hover:bg-white/10"
+                          }`}
+                        style={i === activeService ? { background: service.cardBg, opacity: 0.8 } : {}}
+                      >
+                        <div className="w-full flex flex-col items-center">
+                          <span className="text-xs">0{i + 1}</span>
+                          <p className="h-fit text-center">{name}</p>
                         </div>
-                        <p className="font-jakarta text-[12px] text-white/40 leading-relaxed pl-3">
-                          {feature.description}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
+                      </button>
+                    </SwiperSlide>
+                  )
+                })}
+              </Swiper>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Sub-service title + description */}
+          <Swiper
+            slidesPerView={1}
+            onSwiper={(s) => (serviceDescSwiperRef.current = s)}
+            onSlideChange={(s) => {
+              handleServiceChange(s.realIndex);
+              serviceSwiperRef.current?.slideTo(s.realIndex);
+            }}
+            className="w-full mb-12"
+          >
+            {serviceEntries.map(([name, data]) => (
+              <SwiperSlide key={name}>
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <h2 className="font-fraunces text-[28px] lg:text-[56px] text-white font-normal tracking-[-1px] mb-4">
+                    {name}
+                  </h2>
+                  <p
+                    className="font-jakarta text-[14px] md:text-[15px] leading-relaxed max-w-[640px]"
+                    style={{ color: service.secondaryBg }}
+                  >
+                    {data.description}
+                  </p>
                 </motion.div>
               </SwiperSlide>
             ))}
           </Swiper>
+
+          {/* ── Slider 3: Packages ── */}
+          <div className="mb-6 w-full">
+            <p className="font-fraunces text-[24px] lg:text-[48px] font-normal text-white mb-6">Available Packages</p>
+            <Swiper
+              centeredSlides={isMobile}
+              slidesPerView="auto"
+              spaceBetween={16}
+              onSwiper={(s) => (packageSwiperRef.current = s)}
+              onSlideChange={(s) => setActivePackage(s.realIndex)}
+              className="w-full lg:w-[90%] max-w-h-[800px] h-fit"
+            >
+              {activeServiceData.packages.map((pkg, i) => (
+                <SwiperSlide
+                  key={pkg.name}
+                  style={{ width: "auto" }}
+                  onClick={() => {
+                    setActivePackage(i);
+                    packageSwiperRef.current?.slideTo(i);
+                  }}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: i * 0.08 }}
+                    className={`h-full w-[320px] lg:w-[500px] flex flex-col rounded-[20px] bg-white/5 border border-white/10 p-5 lg:p-6 gap-2 cursor-pointer transition-all duration-300`}
+                  >
+                    {/* Package header */}
+                    <div className="flex flex-col gap-1 pb-4">
+                      <span
+                        className="font-jakarta text-[20px] lg:text-[36px] tracking-[2px]"
+                        style={{ color: service.secondaryBg }}
+                      >
+                        {pkg.name}
+                      </span>
+                      <p
+                        className="font-fraunces text-sm font-normal mb-2"
+                        style={{ color: service.secondaryBgLight }}
+                      >
+                        {pkg.price}
+                      </p>
+                      <p className="font-jakarta text-[14px] text-white/50 leading-snug">{pkg.description}</p>
+                    </div>
+
+                    {/* Features */}
+                    <ul className="flex flex-col gap-3">
+                      {pkg.features.map((feature) => (
+                        <li key={feature.name} className={`${feature.enable !== undefined && feature.enable !== true ? 'blur-[2px]' : ''} flex flex-col gap-0.5`}>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-1 h-1 rounded-full shrink-0"
+                              style={{ backgroundColor: service.secondaryBg }}
+                            />
+                            <span className="font-jakarta text-[13px] text-white/90 font-medium">
+                              {feature.name}
+                            </span>
+                          </div>
+                          <p className="font-jakarta text-[12px] text-white/40 leading-relaxed pl-3">
+                            {feature.description}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
         </div>
 
+        {/* ── Loading overlay ── */}
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, transition: { duration: 0.7 } }}
+              transition={{ duration: 0.25 }}
+              className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-black/90"
+            >
+              <LoadingOverlay />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="w-fit mx-auto">
