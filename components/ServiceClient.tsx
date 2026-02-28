@@ -61,20 +61,28 @@ export default function ServiceClient() {
 
   const handleDomainChange = useCallback((i: number) => {
     if (i === selectedDomain) return;
-    // Highlight tab immediately
     setSelectedDomain(i);
-    setIsLoading(true);
-    // Cancel any in-flight timer
-    if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
-    loadingTimerRef.current = setTimeout(() => {
+    if (isMobile) {
+      // On mobile: switch instantly, no loading screen
       setActiveDomain(i);
       setActiveService(0);
       setActivePackage(0);
       serviceSwiperRef.current?.slideTo(0);
       packageSwiperRef.current?.slideTo(0);
-      setIsLoading(false);
-    }, 2000);
-  }, [selectedDomain]);
+    } else {
+      // On desktop: show loading overlay for 2s
+      setIsLoading(true);
+      if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current);
+      loadingTimerRef.current = setTimeout(() => {
+        setActiveDomain(i);
+        setActiveService(0);
+        setActivePackage(0);
+        serviceSwiperRef.current?.slideTo(0);
+        packageSwiperRef.current?.slideTo(0);
+        setIsLoading(false);
+      }, 2000);
+    }
+  }, [selectedDomain, isMobile]);
 
   useEffect(() => () => { if (loadingTimerRef.current) clearTimeout(loadingTimerRef.current); }, []);
 
@@ -97,46 +105,74 @@ export default function ServiceClient() {
         </div>
 
         <div className="h-[85%] flex flex-col items-center justify-center gap-6 max-w-[800px]">
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8"
-          >
-            <span className="font-fraunces-italic text-white">Our</span>
-            <br />
-            <motion.span
-              key={domainKey}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="bg-clip-text text-transparent"
-              style={{ backgroundImage: `linear-gradient(to bottom, #fff, ${service.mainBg})` }}
+          {isMobile ? (
+            <h1 className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8">
+              <span className="font-fraunces-italic text-white">Our</span>
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: `linear-gradient(to bottom, #fff, ${service.mainBg})` }}
+              >
+                Services
+              </span>
+            </h1>
+          ) : (
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8"
             >
-              Services
-            </motion.span>
-          </motion.h1>
+              <span className="font-fraunces-italic text-white">Our</span>
+              <br />
+              <motion.span
+                key={domainKey}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: `linear-gradient(to bottom, #fff, ${service.mainBg})` }}
+              >
+                Services
+              </motion.span>
+            </motion.h1>
+          )}
 
-          <motion.p
-            key={`desc-${domainKey}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
-            style={{ color: service.secondaryBg }}
-          >
-            We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
-          </motion.p>
+          {isMobile ? (
+            <p
+              className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
+              style={{ color: service.secondaryBg }}
+            >
+              We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
+            </p>
+          ) : (
+            <motion.p
+              key={`desc-${domainKey}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
+              style={{ color: service.secondaryBg }}
+            >
+              We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
+            </motion.p>
+          )}
         </div>
 
         <div className="flex flex-col items-center gap-1.5 pb-0.5">
           <span className="text-neutral-50/60 font-jakarta text-xs font-medium uppercase leading-5 tracking-[1.2px]">Scroll</span>
           <div className="w-px h-8 bg-linear-to-b from-white/60 to-white/10" />
           <div className="relative w-[80vw] mt-2">
-            <div className="absolute -top-8 w-full h-4 blur-3xl rounded-full opacity-20" style={{ backgroundColor: "white" }} />
-            <div className="absolute -top-8 w-full h-12 blur-xl lg:blur-xl rounded-full" style={{ backgroundColor: service.secondaryBg }} />
+            {!isMobile && (
+              <>
+                <div className="absolute -top-8 w-full h-4 blur-3xl rounded-full opacity-20" style={{ backgroundColor: "white" }} />
+                <div className="absolute -top-8 w-full h-12 blur-xl rounded-full" style={{ backgroundColor: service.secondaryBg }} />
+              </>
+            )}
             <div className="relative h-0.5 lg:h-px bg-linear-to-r from-transparent via-white to-transparent" />
-            <div className="absolute top-0 w-full h-1 blur-xl rounded-full" style={{ backgroundColor: "white", opacity: 0.15 }} />
+            {!isMobile && (
+              <div className="absolute top-0 w-full h-1 blur-xl rounded-full" style={{ backgroundColor: "white", opacity: 0.15 }} />
+            )}
           </div>
         </div>
       </section>
@@ -164,7 +200,7 @@ export default function ServiceClient() {
                       handleDomainChange(i);
                       domainSwiperRef.current?.slideTo(i);
                     }}
-                    className={`max-w-[190px] lg:max-w-none px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === selectedDomain
+                    className={`px-3 py-3 lg:px-6 text-xs lg:text-sm rounded-full font-jakarta tracking-[1.5px] uppercase hover:cursor-pointer transition-all duration-200 whitespace-nowrap ${i === selectedDomain
                       ? "bg-white text-black border-white"
                       : "hover:bg-white/10 bg-transparent"
                       }`}
@@ -201,16 +237,11 @@ export default function ServiceClient() {
         <div className="h-fit w-[90%] mx-auto flex flex-col items-start p-3 lg:p-10 mb-8 rounded-[20px] border border-white/10"
           style={{
             background: `radial-gradient(135.36% 70.71% at 50% 50%, ${service.cardBg} 0%, rgba(0,0,0,0.60) 100%)`,
-            backdropFilter: "blur(26px)",
+            ...(isMobile ? {} : { backdropFilter: "blur(26px)" }),
           }}>
 
           {/* ── Slider 2: Sub-service selector ── */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={domainKey} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.35 }}
-              className="mb-12 w-full"
-            >
+          <div className="mb-12 w-full">
               <Swiper
                 modules={[FreeMode]}
                 centeredSlides={isMobile}
@@ -243,8 +274,7 @@ export default function ServiceClient() {
                   )
                 })}
               </Swiper>
-            </motion.div>
-          </AnimatePresence>
+          </div>
 
           {/* Sub-service title + description */}
           <div className="w-full mb-12">
@@ -326,20 +356,22 @@ export default function ServiceClient() {
 
         </div>
 
-        {/* ── Loading overlay ── */}
-        <AnimatePresence>
-          {isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.7 } }}
-              transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-black/90"
-            >
-              <LoadingOverlay />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* ── Loading overlay (desktop only) ── */}
+        {!isMobile && (
+          <AnimatePresence>
+            {isLoading && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0, transition: { duration: 0.7 } }}
+                transition={{ duration: 0.25 }}
+                className="fixed inset-0 z-9999 flex flex-col items-center justify-center bg-black/90"
+              >
+                <LoadingOverlay />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
       </div>
 
       <div className="w-fit mx-auto">
