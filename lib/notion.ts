@@ -17,7 +17,25 @@ export interface Partner {
   year?: string;
   budget?: string;
   duration?: string;
+  client?: string;
+  description?: string;
+  challenge?: string;
   [key: string]: any;
+}
+
+export function toPartnerSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+export async function getPartnerBySlug(slug: string): Promise<Partner | null> {
+  const partners = await getPartners();
+  return partners.find((p) => toPartnerSlug(p.name) === slug) ?? null;
 }
 
 export async function getPartners(): Promise<Partner[]> {

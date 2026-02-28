@@ -80,8 +80,11 @@ export async function GET() {
       additionalVideos: extractFileUrls(props.Additional_videos?.files ?? []),
       category:         extractText(props.Category?.rich_text ?? []),
       year:             extractText(props.Year?.rich_text ?? []),
-      budget:           extractText(props.Budget?.rich_text ?? []),
-      duration:         extractText(props.Duration?.rich_text ?? []),
+      budget:           textData.budget   ?? extractText(props.Budget?.rich_text   ?? []),
+      duration:         textData.duration  ?? extractText(props.Duration?.rich_text  ?? []),
+      client:           textData.client    ?? extractText(props.Client?.rich_text    ?? []),
+      description:      textData.description ?? "",
+      challenge:        textData.challenge   ?? "",
     };
   });
 

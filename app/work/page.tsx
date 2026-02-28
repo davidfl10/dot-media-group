@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
-import { getPartners, Partner } from "@/lib/notion";
+import { getPartners, Partner, toPartnerSlug } from "@/lib/notion";
 import { useLoading } from "@/context/LoadingContext";
 //components
 import { LiquidButton } from "@/components/liquid-glass-button";
@@ -22,24 +22,56 @@ function ProjectCard({ partner, index, className }: {
 }) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hovered, setHovered] = useState(false);
-    const ref = useRef(null);
-    const inView = useInView(ref, { once: true, margin: "0px 0px -2% 0px" });
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [srcLoaded, setSrcLoaded] = useState(false);
+    const [isDesktop, setIsDesktop] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
 
-    // Autoplay when in view (handles mobile)
+    // Detect pointer device (desktop = true hover support)
     useEffect(() => {
-        if (inView && videoRef.current) {
-            videoRef.current.play().catch(() => { });
-        }
-    }, [inView]);
+        const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+        setIsDesktop(mq.matches);
+        const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+        mq.addEventListener("change", handler);
+        return () => mq.removeEventListener("change", handler);
+    }, []);
 
+    // Loose inView — just used to lazy-load the src before the card is visible
+    const nearView = useInView(ref, { once: true, margin: "200px 0px 200px 0px" });
+    // Tight inView — only fires when the card is roughly centered on screen (mobile)
+    const centeredInView = useInView(ref, { once: false, margin: "-38% 0px -38% 0px" });
+
+    // Lazy-load src as card approaches viewport
+    useEffect(() => {
+        if (nearView) setSrcLoaded(true);
+    }, [nearView]);
+
+    // Mobile: play only the centered video
+    useEffect(() => {
+        if (isDesktop) return;
+        if (centeredInView) {
+            setSrcLoaded(true);
+            videoRef.current?.play().catch(() => { });
+        } else {
+            if (videoRef.current) {
+                videoRef.current.pause();
+                videoRef.current.currentTime = 0;
+            }
+        }
+    }, [centeredInView, isDesktop]);
+
+    // Desktop: hover-driven play / pause
     const handleMouseEnter = () => {
         setHovered(true);
-        videoRef.current?.play().catch(() => { });
+        if (isDesktop) {
+            setSrcLoaded(true);
+            videoRef.current?.play().catch(() => { });
+        }
     };
 
     const handleMouseLeave = () => {
         setHovered(false);
-        if (videoRef.current) {
+        if (isDesktop && videoRef.current) {
             videoRef.current.pause();
             videoRef.current.currentTime = 0;
         }
@@ -51,11 +83,11 @@ function ProjectCard({ partner, index, className }: {
         <motion.div
             ref={ref}
             initial={{ opacity: 0, y: 24 }}
-            animate={index < 3 || inView ? { opacity: 1, y: 0 } : {}}
+            animate={index < 3 || nearView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: (index % 6) * 0.05 }}
             className={`w-full h-full ${className || ""}`}
         >
-            <Link href="#" className="w-full h-full block">
+            <Link href={`/work/${toPartnerSlug(partner.name)}`} className="w-full h-full block">
                 <div
                     className="relative overflow-hidden rounded-[20px] border border-[#32323B]
                         bg-gradient-to-b from-transparent via-black/40 to-black/60
@@ -65,14 +97,16 @@ function ProjectCard({ partner, index, className }: {
                 >
                     <video
                         ref={videoRef}
-                        src={inView ? partner.mainVideo : undefined}
+                        src={srcLoaded ? partner.mainVideo : undefined}
                         muted
                         loop
                         playsInline
-                        autoPlay
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
                         className={`
                             absolute inset-0 w-full h-full object-cover
-                            transition-transform duration-700 group-hover:scale-105
+                            transition-transform duration-700
+                            ${isPlaying ? 'scale-105' : 'scale-100'}
                             ${index % 2 === 0 ? 'origin-top-left' : 'origin-top-right'}
                         `}
                     />

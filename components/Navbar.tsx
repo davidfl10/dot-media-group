@@ -20,8 +20,8 @@ const Navbar = () => {
   return (
     <>
       {width && width < 750 ? (
-        <div className='h-screen w-screen'>
-          <StaggeredMenu
+      <>
+        <StaggeredMenu
             isFixed={true}
             position="right"
             items={menuItems}
@@ -35,9 +35,9 @@ const Navbar = () => {
             onMenuOpen={() => console.log('Menu opened')}
             onMenuClose={() => console.log('Menu closed')}
           />
-        </div>
+      </>
       ) : (
-        <div className='inline-flex p-3 items-center justify-between lg:justify-normal gap-16 rounded-[110px] border-[1px] border-neutral-800 bg-[rgba(14, 14, 14, 0.70)]backdrop-blur-xl'>
+        <div className='inline-flex p-3 items-center justify-between lg:justify-normal gap-16 rounded-[110px] border-[1px] border-neutral-800 bg-[rgba(14,14,14,0.70)] backdrop-blur-xl'>
           <Link href="/">
             <Image src={Logo} alt="Logo" width={logoWidth} height={logoHeight} />
           </Link>
