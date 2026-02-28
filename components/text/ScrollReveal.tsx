@@ -174,7 +174,7 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
     return (
         <div ref={containerRef} className={`my-5 mx-0 ${containerClassName}`}>
-            <div className={`text-center text-neutral-50 self-stretch font-fraunces text-2xl lg:text-5xl leading-7 lg:leading-14 font-light tracking-[-0.48px] lg:tracking-[-0.96px] ${textClassName} ${containerClassName}`}>{splitText}</div>
+            <div className={`text-center text-neutral-50 self-stretch font-fraunces text-2xl lg:text-[40px] leading-7 lg:leading-12 font-light tracking-[-0.48px] lg:tracking-[-0.96px] ${textClassName} ${containerClassName}`}>{splitText}</div>
         </div>
     );
 };
