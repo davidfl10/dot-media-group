@@ -17,9 +17,16 @@ export interface Partner {
   year?: string;
   budget?: string;
   duration?: string;
-  client?: string;
-  description?: string;
+  product?: string;
+  productDescription?: string;
   challenge?: string;
+  visualIdentity?: string;
+  ourApproach?: string;
+  clientVoice?: string;
+  clientVoiceName?: string;
+  clientVoiceRole?: string;
+  clientVoiceAvatar?: string | null;
+  creativeDirectorWords?: string;
   [key: string]: any;
 }
 

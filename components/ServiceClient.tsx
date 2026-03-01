@@ -21,7 +21,7 @@ export default function ServiceClient() {
   const heroInView = useInView(heroRef, { once: true });
 
   const width = useWindowWidth();
-  const isMobile = width < 1050;
+  const isMobile = !width || width < 1050;
   // Swiper refs
   const domainSwiperRef = useRef<SwiperType | null>(null);
   const descSwiperRef = useRef<SwiperType | null>(null);

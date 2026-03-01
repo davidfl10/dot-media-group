@@ -145,7 +145,7 @@ export const servicePackages: Record<string, Record<string, ServiceData>> = {
             secondaryBgLight: "#7C8FAB",
             cardBg: "rgba(19, 36, 52, 0.60)",
             name: "Digital Marketing & Visual Communication",
-            description: "Our consulting services provide expert guidance to help you navigate complex business challenges and achieve your goals.",
+            description: "Our digital marketing services are designed to elevate your brand's online presence and drive meaningful engagement through strategic campaigns and compelling visual communication.",
             services: {
                 "Social Media Management": {
                     description: "Our Social Media Management service offers comprehensive solutions to elevate your brand's online presence, engage your audience, and drive meaningful results across all major platforms.",
@@ -527,7 +527,7 @@ export const servicePackages: Record<string, Record<string, ServiceData>> = {
             secondaryBgLight: "#7C8FAB",
             cardBg: "rgba(19, 36, 52, 0.60)",
             name: "Marketing Digital & Comunicare Vizuală",
-            description: "Serviciile noastre de consultanță oferă îndrumare expertă pentru a vă ajuta să navigați provocările complexe de afaceri și să vă atingeți obiectivele.",
+            description: "Serviciile noastre de marketing digital sunt concepute pentru a ridica prezența online a brandului dvs. și a genera angajament semnificativ prin campanii strategice și comunicare vizuală convingătoare.",
             services: {
                 "Gestionare Social Media": {
                     description: "Serviciul nostru de Gestionare Social Media oferă soluții complete pentru a îmbunătăți prezența online a brandului dvs., a implica publicul și a genera rezultate semnificative.",

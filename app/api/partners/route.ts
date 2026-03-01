@@ -80,11 +80,18 @@ export async function GET() {
       additionalVideos: extractFileUrls(props.Additional_videos?.files ?? []),
       category:         extractText(props.Category?.rich_text ?? []),
       year:             extractText(props.Year?.rich_text ?? []),
-      budget:           textData.budget   ?? extractText(props.Budget?.rich_text   ?? []),
-      duration:         textData.duration  ?? extractText(props.Duration?.rich_text  ?? []),
-      client:           textData.client    ?? extractText(props.Client?.rich_text    ?? []),
-      description:      textData.description ?? "",
-      challenge:        textData.challenge   ?? "",
+      budget:                  textData.budget   ?? extractText(props.Budget?.rich_text   ?? []),
+      duration:                 textData.duration  ?? extractText(props.Duration?.rich_text  ?? []),
+      product:                  extractText(props.Product?.rich_text               ?? []),
+      productDescription:       extractText(props.Product_Description?.rich_text   ?? []),
+      challenge:                extractText(props.Challenge?.rich_text             ?? []),
+      visualIdentity:           extractText(props.Visual_Identity?.rich_text       ?? []),
+      ourApproach:              extractText(props.Our_Approach?.rich_text          ?? []),
+      clientVoice:              extractText(props.Client_Voice?.rich_text             ?? []),
+      clientVoiceName:          extractText(props.Client_Voice_Name?.rich_text        ?? []),
+      clientVoiceRole:          extractText(props.Client_Voice_Role?.rich_text        ?? []),
+      clientVoiceAvatar:        extractFileUrls(props.Client_Voice_Avatar?.files      ?? [])[0] ?? null,
+      creativeDirectorWords:    extractText(props.Creative_Director_Words?.rich_text  ?? []),
     };
   });
 
