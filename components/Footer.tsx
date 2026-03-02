@@ -35,7 +35,7 @@ export default function Footer() {
           <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-300 transition-colors duration-200">
             <Image src={FacebookIcon} alt="Facebook" width={32} height={32} className="hover:scale-110 transition-transform" />
           </Link>
-          <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-300 transition-colors duration-200">
+          <Link href="https://www.instagram.com/dotmg.eu/" target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-neutral-300 transition-colors duration-200">
             <Image src={InstagramIcon} alt="Instagram" width={32} height={32} className="hover:scale-110 transition-transform" />
           </Link>
         </div>

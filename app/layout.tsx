@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "@/context/ThemeContext";
 import { LoadingProvider } from "@/context/LoadingContext";
 import LoadingOverlay from "@/components/LoadingOverlay";
+import LanguageProvider from "@/context/LanguageContext";
 
  
 export const mainFont = localFont({
@@ -51,9 +52,11 @@ export default function RootLayout({
         className={`${mainFont.variable} ${secondaryFont.variable} ${jakartaFont.variable} ${frauncesFont.variable} ${frauncesItalicFont.variable} antialiased bg-black overflow-x-hidden`}
       >
         <ThemeProvider>
-          <LoadingProvider overlay={<LoadingOverlay />}>
-            {children}
-          </LoadingProvider>
+          <LanguageProvider>
+            <LoadingProvider overlay={<LoadingOverlay />}>
+              {children}
+            </LoadingProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

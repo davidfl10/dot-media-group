@@ -113,11 +113,11 @@ export default function Home() {
         </div>
 
         <div className="h-[85%] w-full max-w-[1608px] px-4 lg:px-10 flex flex-col items-center lg:items-start justify-around gap-6 text-center">
-
           <h3 className="hidden md:block max-w-[40%] self-stretch text-neutral-500 text-start font-jakarta text-lg font-normal leading-8 tracking-[-0.36px]">
             DOT Media Group is a premier global digital agency shaping the future of online presence. We fuse strategy, design, and innovation to create brands that define their industries.
           </h3>
-          <div className="flex flex-col items-center lg:items-start justify-center lg:justify-start">
+          <h3 className="md:hidden" />
+          <div className="flex flex-col items-end lg:items-start justify-center lg:justify-start">
             <h1 className="text-center lg:text-start self-stretch font-fraunces text-[40px] md:text-[80px] lg:text-[135px] font-normal leading-11 md:leading-20 lg:leading-32 tracking-[-0.8px] lg:tracking-[-2.8px] bg-gradient-to-t from-[#535353] to-white bg-clip-text text-transparent">
               We redefine
             </h1>
@@ -232,7 +232,7 @@ export default function Home() {
             <div className="flex w-full items-center justify-center lg:justify-between lg:px-20 mb-8">
               <div className="flex flex-col items-center justify-center gap-2">
                 <p className="font-jakarta text-xs text-[#6B7280] font-normal leading-4 tracking-[1.2px] uppercase">
-                  {activePartner?.category ?? "—"}
+                  {activePartner?.service ?? "—"}
                 </p>
                 <p className="font-fraunces text-[28px] text-white font-light leading-[33.6px] tracking-[-0.56px]">
                   {activePartner?.name ?? "—"}
@@ -253,6 +253,7 @@ export default function Home() {
           items={partners.slice(0, 5).map((p) => ({
             videoSrc: p.mainVideo ?? "/partners/brutariabardar/video1.mp4",
             title: p.category ?? p.name,
+            alt: p.name,
           }))}
           initialSlide={2}
           onActiveIndexChange={setCarouselIndex}

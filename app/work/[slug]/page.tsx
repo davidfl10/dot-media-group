@@ -8,6 +8,7 @@ import { getPartners, toPartnerSlug, Partner } from "@/lib/notion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useParams } from "next/navigation";
+import RelatedProjects from "@/components/RelatedProjects";
 // icons
 import ArrowBack from "@/public/icons/arrow-back.svg";
 
@@ -299,7 +300,7 @@ export default function ProjectPage() {
         { label: "Budget", value: partner.budget },
         { label: "Duration", value: partner.duration },
         { label: "Client", value: partner.name },
-        { label: "Services", value: partner.category },
+        { label: "Services", value: partner.service },
     ].filter((s) => s.value);
 
     return (
@@ -728,6 +729,13 @@ export default function ProjectPage() {
                     </div>
                 </div>
             )}
+
+            <RelatedProjects
+                title="Explore more"
+                subtitle="Other Projects"
+                domain="Digital marketing"
+                excludeSlug={params.slug}
+            />
 
 
             {/* ──────────────────────────────────────────── FOOTER ── */}

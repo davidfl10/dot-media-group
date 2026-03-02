@@ -10,6 +10,8 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { servicePackages } from "@/lib/servicePackages";
 import useWindowWidth from "@/lib/useWindowWidth";
+import { useLanguage } from "@/context/LanguageContext";
+import RelatedProjects from "./RelatedProjects";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -49,9 +51,9 @@ export default function ServiceClient() {
   const [activeService, setActiveService] = useState(0);
   const [activePackage, setActivePackage] = useState(0);
 
-  const lang = "en";
+  const { language } = useLanguage();
   const domainKey = useMemo(() => DOMAIN_KEYS[activeDomain], [activeDomain]);
-  const service = useMemo(() => servicePackages[lang][domainKey], [domainKey]);
+  const service = useMemo(() => servicePackages[language][domainKey], [language, domainKey]);
   const serviceEntries = useMemo(() => Object.entries(service.services), [service]);
   const activeServiceData = serviceEntries[activeService][1];
   const buttonWidth = isMobile ? 60 : 100 / serviceEntries.length - 0.5;
@@ -169,7 +171,7 @@ export default function ServiceClient() {
       </section >
 
       {/* ── Main Content ── */}
-      < main className="h-fit max-w-[1200px] flex flex-col items-center justify-center mx-auto px-6 lg:px-12 text-white" >
+      < main id="services" className="h-fit max-w-[1200px] flex flex-col items-center justify-center mx-auto px-6 lg:px-12 text-white" >
 
         {/* ── Slider 1: Domain selector ── */}
         <div className="mt-20 flex flex-col items-center justify-center" >
@@ -183,7 +185,7 @@ export default function ServiceClient() {
             className="rounded-full border border-white/10 bg-stone-950"
           >
             {DOMAIN_KEYS.map((key, i) => {
-              const d = servicePackages[lang][key];
+              const d = servicePackages[language][key];
               return (
                 <SwiperSlide key={key} style={{ width: "auto" }}>
                   <button
@@ -218,7 +220,7 @@ export default function ServiceClient() {
               className="w-full my-8"
             >
               {DOMAIN_KEYS.map((key) => {
-                const d = servicePackages[lang][key];
+                const d = servicePackages[language][key];
                 return (
                   <SwiperSlide key={key}>
                     <div className="flex flex-col items-start gap-4 px-4">
@@ -397,6 +399,12 @@ export default function ServiceClient() {
               ))}
             </Swiper>
           </div>
+
+          <RelatedProjects
+            title="Related Work"
+            subtitle="Completed Projects"
+            domain="Digital marketing"                   
+          />
 
         </div>
 

@@ -7,10 +7,15 @@ import Close from '@/public/icons/close.svg';
 import Arrow from '@/public/icons/chevron.png';
 import Link from 'next/link';
 
+export interface StaggeredMenuSubItem {
+    label: string;
+    link: string;
+}
 export interface StaggeredMenuItem {
     label: string;
     ariaLabel: string;
     link: string;
+    subItems?: StaggeredMenuSubItem[];
 }
 export interface StaggeredMenuSocialItem {
     label: string;
@@ -52,7 +57,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
     onMenuClose
 }: StaggeredMenuProps) => {
     const [open, setOpen] = useState(false);
+    const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
     const openRef = useRef(false);
+    const mainListRef = useRef<HTMLDivElement | null>(null);
+    const subListRefs = useRef<Record<number, HTMLDivElement | null>>({});
 
     const panelRef = useRef<HTMLDivElement | null>(null);
     const preLayersRef = useRef<HTMLDivElement | null>(null);
@@ -281,6 +289,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         if (openRef.current) {
             openRef.current = false;
             setOpen(false);
+            setActiveSubmenu(null);
             onMenuClose?.();
             playClose();
             animateColor(false);
@@ -388,41 +397,127 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                 >
                     <div className="sm-panel-frame">
                         <div className="sm-panel-inner flex-1 flex flex-col gap-5">
-                            <ul
-                                className="sm-panel-list list-none m-0 p-2 flex flex-col gap-5"
-                                role="list"
-                                data-numbering={displayItemNumbering || undefined}
+                            <div
+                                className="relative overflow-hidden transition-[min-height] duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                                style={{
+                                    minHeight: activeSubmenu !== null
+                                        ? subListRefs.current[activeSubmenu]?.scrollHeight ?? 'auto'
+                                        : mainListRef.current?.scrollHeight ?? 'auto',
+                                }}
                             >
-                                {items && items.length ? (
-                                    items.map((it, idx) => (
-                                        <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
-                                            <div className='w-full flex items-center justify-between py-2 px-4 hover:rounded-2xl hover:backdrop-blur-[6px] hover:bg-white/5 focus:bg-white/5'>
-                                                <a
-                                                    className="sm-panel-item relative text-neutral-50 font-semibold text-xs font-jakarta cursor-pointer leading-none tracking-[-1.2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
-                                                    href={it.link}
-                                                    aria-label={it.ariaLabel}
-                                                    data-index={idx + 1}
-                                                >
+                                {/* ── Main items panel ── */}
+                                <div
+                                    ref={mainListRef}
+                                    className="transition-all duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                                    style={{
+                                        transform: activeSubmenu !== null ? 'translateX(-100%)' : 'translateX(0)',
+                                        opacity: activeSubmenu !== null ? 0 : 1,
+                                    }}
+                                >
+                                    <ul
+                                        className="sm-panel-list list-none m-0 p-2 flex flex-col gap-5"
+                                        role="list"
+                                        data-numbering={displayItemNumbering || undefined}
+                                    >
+                                        {items && items.length ? (
+                                            items.map((it, idx) => (
+                                                <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
+                                                    <div
+                                                        className='w-full flex items-center justify-between py-2 px-4 hover:rounded-2xl hover:backdrop-blur-[6px] hover:bg-white/5 focus:bg-white/5 cursor-pointer'
+                                                        onClick={() => {
+                                                            if (it.subItems && it.subItems.length > 0) {
+                                                                setActiveSubmenu(idx);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <a
+                                                            className="sm-panel-item relative text-neutral-50 font-semibold text-xs font-jakarta cursor-pointer leading-none tracking-[-1.2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
+                                                            href={it.subItems && it.subItems.length > 0 ? undefined : it.link}
+                                                            onClick={(e) => { if (it.subItems && it.subItems.length > 0) e.preventDefault(); }}
+                                                            aria-label={it.ariaLabel}
+                                                            data-index={idx + 1}
+                                                        >
+                                                            <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
+                                                                {it.label}
+                                                            </span>
+                                                        </a>
+                                                        {it.subItems && it.subItems.length > 0 && (
+                                                            <Image
+                                                                src={Arrow}
+                                                                alt='Arrow'
+                                                                width={10}
+                                                                height={10}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="sm-panel-itemWrap relative overflow-hidden leading-none" aria-hidden="true">
+                                                <span className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]">
                                                     <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
-                                                        {it.label}
+                                                        No items
                                                     </span>
-                                                </a>
-                                                {it.label === 'Services' && (
-                                                    <Image src={Arrow} alt='Arrow right' width={10} height={10} />
-                                                )}
-                                            </div>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li className="sm-panel-itemWrap relative overflow-hidden leading-none" aria-hidden="true">
-                                        <span className="sm-panel-item relative text-black font-semibold text-[4rem] cursor-pointer leading-none tracking-[-2px] uppercase transition-[background,color] duration-150 ease-linear inline-block no-underline pr-[1.4em]">
-                                            <span className="sm-panel-itemLabel inline-block [transform-origin:50%_100%] will-change-transform">
-                                                No items
-                                            </span>
-                                        </span>
-                                    </li>
+                                                </span>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+
+                                {/* ── Sub-items panel (slides in from right) ── */}
+                                {items.map((it, idx) =>
+                                    it.subItems && it.subItems.length > 0 ? (
+                                        <div
+                                            key={`sub-${idx}`}
+                                            ref={(el) => { subListRefs.current[idx] = el; }}
+                                            className="absolute top-0 left-0 w-full transition-all duration-400 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                                            style={{
+                                                transform: activeSubmenu === idx ? 'translateX(0)' : 'translateX(100%)',
+                                                opacity: activeSubmenu === idx ? 1 : 0,
+                                                pointerEvents: activeSubmenu === idx ? 'auto' : 'none',
+                                            }}
+                                        >
+                                            <ul className="list-none m-0 p-2 flex flex-col gap-5">
+                                                {/* Back button */}
+                                                <li className="sm-panel-itemWrap relative overflow-hidden leading-none">
+                                                    <div
+                                                        className='w-full flex items-center gap-3 py-2 px-4 hover:rounded-2xl hover:backdrop-blur-[6px] hover:bg-white/5 cursor-pointer'
+                                                        onClick={() => setActiveSubmenu(null)}
+                                                    >
+                                                        <Image
+                                                            src={Arrow}
+                                                            alt='Back'
+                                                            width={10}
+                                                            height={10}
+                                                            className='rotate-180 opacity-50'
+                                                        />
+                                                        <span className="sm-panel-item relative text-neutral-400 font-semibold text-xs font-jakarta cursor-pointer leading-none tracking-[-1.2px] uppercase">
+                                                            Back
+                                                        </span>
+                                                    </div>
+                                                </li>
+
+                                                {/* Divider */}
+                                                <li className="px-4"><div className="h-px bg-white/10" /></li>
+
+                                                {/* Sub-items */}
+                                                {it.subItems.map((sub, si) => (
+                                                    <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={si}>
+                                                        <a
+                                                            href={sub.link}
+                                                            className='w-full flex items-center py-2 px-4 hover:rounded-2xl hover:backdrop-blur-[6px] hover:bg-white/5 cursor-pointer no-underline'
+                                                        >
+                                                            <span className="sm-panel-item relative text-neutral-50 font-semibold text-xs font-jakarta cursor-pointer leading-none tracking-[-1.2px] uppercase">
+                                                                {sub.label}
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ) : null
                                 )}
-                            </ul>
+                            </div>
 
                             {displaySocials && socialItems && socialItems.length > 0 && (
                                 <div className="sm-socials mt-auto pt-8 flex flex-col gap-3" aria-label="Social links">

@@ -14,6 +14,7 @@ export interface Partner {
   photos: string[];
   additionalVideos: string[];
   category?: string;
+  service?: string;
   year?: string;
   budget?: string;
   duration?: string;

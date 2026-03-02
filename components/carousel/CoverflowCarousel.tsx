@@ -7,6 +7,7 @@ import { LiquidButton } from "../liquid-glass-button";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperInstance } from "swiper";
 import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { toPartnerSlug } from "@/lib/notion";
 // icons
 import playIcon from "@/public/icons/play-icon.svg";
 import arrowRight from "@/public/icons/arrow-right.svg";
@@ -126,29 +127,29 @@ export default function CoverflowCarousel({
             >
                 {items.map((item, idx) => (
                     <SwiperSlide key={idx} className="relative w-auto! h-fit flex items-center justify-center">
-                        <div className="relative w-[85vw] max-w-[332px] lg:max-w-[820px] aspect-3/4 lg:aspect-video rounded-[20px] mx-auto border border-[#32323B] bg-gradient-to-b from-transparent via-black/41 to-black/48 overflow-hidden">
-                            <video
-                                ref={(el) => {
-                                    if (el) {
-                                        if (idx === activeIndex) el.play().catch(() => { });
-                                        else el.pause();
-                                    }
-                                }}
-                                src={item.videoSrc}
-                                muted
-                                loop
-                                playsInline
-                                autoPlay
-                                className={`block w-full h-full select-none object-cover rounded-[20px] transition-all duration-300 ${idx === activeIndex ? "blur-0" : "blur-[6px]"
-                                    }`}
-                                draggable={false}
-                            />
-                            {idx === activeIndex && (
-                                <div className="absolute left-1/2 -bottom-2.5 w-max -translate-x-1/2 -translate-y-[20%] flex flex-col items-center justify-center gap-5 mb-5">
-                                    <span className="text-white text-[32px] leading-8 tracking-[-0.64px] font-fraunces text-center font-light">
-                                        {item.title}
-                                    </span>
-                                    <Link href="#">
+                        <Link href={`/work/${toPartnerSlug(item.alt ?? item.title)}`}>
+                            <div className="relative w-[85vw] max-w-[332px] lg:max-w-[820px] aspect-3/4 lg:aspect-video rounded-[20px] mx-auto border border-[#32323B] bg-gradient-to-b from-transparent via-black/41 to-black/48 overflow-hidden">
+                                <video
+                                    ref={(el) => {
+                                        if (el) {
+                                            if (idx === activeIndex) el.play().catch(() => { });
+                                            else el.pause();
+                                        }
+                                    }}
+                                    src={item.videoSrc}
+                                    muted
+                                    loop
+                                    playsInline
+                                    autoPlay
+                                    className={`block w-full h-full select-none object-cover rounded-[20px] transition-all duration-300 ${idx === activeIndex ? "blur-0" : "blur-[6px]"
+                                        }`}
+                                    draggable={false}
+                                />
+                                {idx === activeIndex && (
+                                    <div className="absolute left-1/2 -bottom-2.5 w-max -translate-x-1/2 -translate-y-[20%] flex flex-col items-center justify-center gap-5 mb-5">
+                                        <span className="text-white text-[32px] leading-8 tracking-[-0.64px] font-fraunces text-center font-light">
+                                            {item.title}
+                                        </span>
                                         <LiquidButton className="w-full lg:w-fit rounded-full px-4 py-3">
                                             <div className="w-full lg:w-fit flex flex-row items-center justify-center gap-3">
                                                 <p className="tracking-[1.4px] text-sm text-white/90 hover:bg-white/10 transition">
@@ -157,10 +158,10 @@ export default function CoverflowCarousel({
                                                 <Image src={playIcon} alt="Play Icon" width={24} height={24} />
                                             </div>
                                         </LiquidButton>
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </Link>
                     </SwiperSlide>
                 ))}
             </Swiper>
