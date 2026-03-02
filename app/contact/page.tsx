@@ -31,7 +31,7 @@ const ContactPage = () => {
             </div>
 
             <div className="flex flex-col items-center justify-center gap-5 h-[80%] w-screen">
-                <div className="h-[40%] lg:h-[55%] flex flex-col items-center justify-center gap-5 max-w-[800px]">
+                <div className="h-[40%] px-3 lg:h-[55%] flex flex-col items-center justify-center gap-5 max-w-[800px]">
                     <motion.h1
                         initial={{ opacity: 0, y: 24 }}
                         animate={heroInView ? { opacity: 1, y: 0 } : {}}
