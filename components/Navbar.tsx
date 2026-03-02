@@ -23,7 +23,7 @@ const Navbar = () => {
     { label: 'Home', ariaLabel: 'Go to home page', link: '/' },
     { label: 'Work', ariaLabel: 'Learn about us', link: '/work' },
     { label: 'Services', ariaLabel: 'View our services', link: '/services', subItems: serviceSubItems },
-    { label: 'Contact', ariaLabel: 'Get in touch', link: '/' }
+    { label: 'Contact', ariaLabel: 'Get in touch', link: '/contact' }
   ];
 
   return (
@@ -55,7 +55,7 @@ const Navbar = () => {
             <nav className='flex items-center justify-center'>
               <a href="/work" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Work</a>
               <a href="/services" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Services</a>
-              <a href="#" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Contact</a>
+              <a href="/contact" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Contact</a>
             </nav>
 
             <button className='flex items-center justify-center px-4 py-3 rounded-[44px] backdrop-blur-[6px] border-[1px] border-slate-200/20 bg-[linear-gradient(0deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.10)_100%)] hover:bg-slate-200/40 bg-[rgba(255, 255, 255, 0.15)] cursor-pointer backdrop-blur-md transition-colors'>
