@@ -6,6 +6,7 @@ import Image from "next/image";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { getPartners, Partner, toPartnerSlug } from "@/lib/notion";
 import { useLoading } from "@/context/LoadingContext";
+import { useTranslation } from "@/lib/useTranslation";
 //components
 import { LiquidButton } from "@/components/liquid-glass-button";
 import Navbar from "@/components/Navbar";
@@ -21,6 +22,7 @@ function ProjectCard({ partner, index, className, preloaded = false }: {
     className?: string;
     preloaded?: boolean;
 }) {
+    const t = useTranslation("work");
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hovered, setHovered] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -140,7 +142,7 @@ function ProjectCard({ partner, index, className, preloaded = false }: {
                             <LiquidButton className="w-full lg:w-fit rounded-full px-4 py-3">
                                 <div className="w-full lg:w-fit flex flex-row items-center justify-center gap-3">
                                     <p className="tracking-[1.4px] text-sm text-white/90 hover:bg-white/10 transition">
-                                        VIEW PROJECT
+                                        {t.viewProject}
                                     </p>
                                     <Image src={playIcon} alt="Play Icon" width={24} height={24} />
                                 </div>
@@ -156,6 +158,7 @@ function ProjectCard({ partner, index, className, preloaded = false }: {
 
 
 export default function Work() {
+    const t = useTranslation("work");
     const { registerLoading } = useLoading();
     const [partners, setPartners] = useState<Partner[]>([]);
     const [loadProgress, setLoadProgress] = useState(0);
@@ -228,7 +231,7 @@ export default function Work() {
                             transition={{ duration: 0.5 }}
                             className="font-jakarta text-[10px] tracking-[3px] uppercase text-white/30 font-light"
                         >
-                            Loading works
+                            {t.loadingLabel}
                         </motion.p>
 
                         {/* Progress bar */}
@@ -263,9 +266,9 @@ export default function Work() {
                         transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
                         className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8"
                     >
-                        <span className="font-fraunces-italic text-white">Selected</span>
+                        <span className="font-fraunces-italic text-white">{t.heroHeading1}</span>
                         <br />
-                        <span className="bg-linear-to-b from-white to-[#535353] bg-clip-text text-transparent ml-20 lg:ml-32">Works</span>
+                        <span className="bg-linear-to-b from-white to-[#535353] bg-clip-text text-transparent ml-20 lg:ml-32">{t.heroHeading2}</span>
                     </motion.h1>
 
                     <motion.p
@@ -274,15 +277,12 @@ export default function Work() {
                         transition={{ duration: 0.7, delay: 0.4 }}
                         className="font-jakarta max-w-[460px] text-[13px] md:text-[14px] text-white/40 leading-relaxed font-light"
                     >
-                        Explore our curated collection of innovative media projects and creative
-                        solutions. Each piece represents a unique blend of technology,
-                        storytelling, and visual artistry, crafted to push boundaries and
-                        deliver exceptional results.
+                        {t.heroDescription}
                     </motion.p>
                 </div>
 
                 <div className="flex flex-col items-center gap-1.5 pb-0.5">
-                    <span className="text-neutral-50/60 font-jakarta text-xs font-medium uppercase leading-5 tracking-[1.2px]">Scroll</span>
+                    <span className="text-neutral-50/60 font-jakarta text-xs font-medium uppercase leading-5 tracking-[1.2px]">{t.scrollLabel}</span>
                     <div className="w-px h-8 bg-linear-to-b from-white/60 to-white/10"></div>
 
                     {/* Glow line */}

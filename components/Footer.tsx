@@ -9,7 +9,7 @@ import InstagramIcon from "@/public/icons/instagram.svg";
 
 export default function Footer() {
   return (
-    <footer className="w-screen max-w-[1608px] flex flex-col items-center justify-start mt-10 p-5 lg:p-10 gap-8 lg:gap-12">
+    <footer className="w-screen max-w-[1608px] mx-auto flex flex-col items-center justify-start mt-10 p-5 lg:p-10 gap-8 lg:gap-12">
       {/* Top Section: Logo and Contact */}
       <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-4">
         <Image src={Logo} alt="DOT Media Group Logo" width={130} height={60} />
@@ -24,10 +24,10 @@ export default function Footer() {
         {/* Navigation Links */}
         <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 text-sm">
           <Link href="/" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Home</Link>
-          <Link href="#services" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Services</Link>
-          <Link href="#work" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Case Studies</Link>
-          <Link href="#project-request" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Project Request</Link>
-          <Link href="#contact" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Contact us</Link>
+          <Link href="/services" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Services</Link>
+          <Link href="/work" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Case Studies</Link>
+          <Link href="/#project-request" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Project Request</Link>
+          <Link href="/contact" className="text-neutral-500 hover:text-neutral-300 font-jakarta font-normal transition-colors duration-200">Contact us</Link>
         </div>
 
         {/* Social Media Links */}

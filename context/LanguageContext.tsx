@@ -1,8 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type Language = "en" | "ro";
+
+const STORAGE_KEY = "dmg-language";
 
 interface LanguageContextValue {
     language: Language;
@@ -13,7 +15,14 @@ interface LanguageContextValue {
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [language, setLanguage] = useState<Language>("en");
+    const [language, setLanguage] = useState<Language>(() => {
+        if (typeof window === "undefined") return "en";
+        return (localStorage.getItem(STORAGE_KEY) as Language) ?? "en";
+    });
+
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, language);
+    }, [language]);
 
     const toggle = () => setLanguage((prev) => (prev === "ro" ? "en" : "ro"));
 

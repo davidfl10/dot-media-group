@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import { servicePackages } from "@/lib/servicePackages";
 import useWindowWidth from "@/lib/useWindowWidth";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/lib/useTranslation";
 import RelatedProjects from "./RelatedProjects";
 
 import "swiper/css";
@@ -52,6 +53,7 @@ export default function ServiceClient() {
   const [activePackage, setActivePackage] = useState(0);
 
   const { language } = useLanguage();
+  const t = useTranslation("services");
   const domainKey = useMemo(() => DOMAIN_KEYS[activeDomain], [activeDomain]);
   const service = useMemo(() => servicePackages[language][domainKey], [language, domainKey]);
   const serviceEntries = useMemo(() => Object.entries(service.services), [service]);
@@ -94,13 +96,13 @@ export default function ServiceClient() {
         <div className="h-[85%] flex flex-col items-center justify-center gap-6 max-w-[800px]">
           {isMobile ? (
             <h1 className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8">
-              <span className="font-fraunces-italic text-white">Our</span>
+              <span className="font-fraunces-italic text-white">{t.heroHeading1}</span>
               <br />
               <span
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: `linear-gradient(to bottom, #fff, ${service.mainBg})` }}
               >
-                Services
+                {t.heroHeading2}
               </span>
             </h1>
           ) : (
@@ -110,7 +112,7 @@ export default function ServiceClient() {
               transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="font-fraunces text-[clamp(52px,10vw,110px)] leading-[0.92] font-light tracking-[-2px] mb-8"
             >
-              <span className="font-fraunces-italic text-white">Our</span>
+              <span className="font-fraunces-italic text-white">{t.heroHeading1}</span>
               <br />
               <motion.span
                 key={domainKey}
@@ -120,7 +122,7 @@ export default function ServiceClient() {
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: `linear-gradient(to bottom, #fff, ${service.mainBg})` }}
               >
-                Services
+                {t.heroHeading2}
               </motion.span>
             </motion.h1>
           )}
@@ -130,7 +132,7 @@ export default function ServiceClient() {
               className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
               style={{ color: service.secondaryBg }}
             >
-              We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
+              {t.heroDescription}
             </p>
           ) : (
             <motion.p
@@ -141,13 +143,13 @@ export default function ServiceClient() {
               className="font-jakarta max-w-[560px] text-[15px] md:text-[16px] leading-7 font-normal"
               style={{ color: service.secondaryBg }}
             >
-              We operate at the intersection of data and desire. Our suite of services is designed to elevate every aspect of your digital presence, explicitly tailored for those who demand excellence.
+              {t.heroDescription}
             </motion.p>
           )}
         </div>
 
         <div className="flex flex-col items-center gap-1.5 pb-0.5">
-          <span className="text-neutral-50/60 font-jakarta text-xs font-medium uppercase leading-5 tracking-[1.2px]">Scroll</span>
+          <span className="text-neutral-50/60 font-jakarta text-xs font-medium uppercase leading-5 tracking-[1.2px]">{t.scrollLabel}</span>
           <div className="w-px h-8 bg-linear-to-b from-white/60 to-white/10" />
           <div className="relative w-[80vw] mt-2">
             {isMobile ? (
@@ -337,7 +339,7 @@ export default function ServiceClient() {
 
           {/* ── Slider 3: Packages ── */}
           <div className="mb-6 w-full">
-            <p className="font-fraunces text-[24px] lg:text-[48px] font-normal text-white mb-6">Available Packages</p>
+            <p className="font-fraunces text-[24px] lg:text-[48px] font-normal text-white mb-6">{t.availablePackages}</p>
             <Swiper
               centeredSlides={isMobile}
               slidesPerView="auto"
@@ -401,9 +403,9 @@ export default function ServiceClient() {
           </div>
 
           <RelatedProjects
-            title="Related Work"
-            subtitle="Completed Projects"
-            domain="Digital marketing"                   
+            title={t.relatedWorkTitle}
+            subtitle={t.relatedWorkSubtitle}
+            domain="Digital marketing"
           />
 
         </div>

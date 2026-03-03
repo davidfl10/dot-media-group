@@ -48,7 +48,7 @@ function EditorialBlock({
                 className="flex flex-col gap-5"
             >
                 {label && (
-                    <span className="text-sm tracking-[2px] uppercase text-[#EED5B2] font-jakarta font-normal">
+                    <span className="text-sm  tracking-[2px] uppercase text-[#EED5B2] font-jakarta font-normal">
                         {label}
                     </span>
                 )}

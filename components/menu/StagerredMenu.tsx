@@ -6,6 +6,7 @@ import Menu from '@/public/icons/menu.svg';
 import Close from '@/public/icons/close.svg';
 import Arrow from '@/public/icons/chevron.png';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export interface StaggeredMenuSubItem {
     label: string;
@@ -58,6 +59,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 }: StaggeredMenuProps) => {
     const [open, setOpen] = useState(false);
     const [activeSubmenu, setActiveSubmenu] = useState<number | null>(null);
+    const { language, toggle: toggleLanguage } = useLanguage();
     const openRef = useRef(false);
     const mainListRef = useRef<HTMLDivElement | null>(null);
     const subListRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -296,6 +298,12 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         }
     }, [playClose, animateColor, onMenuClose]);
 
+    const handleLanguageToggle = useCallback(() => {
+        toggleLanguage();
+        // close the menu after a tiny delay so the label visually updates before closing
+        setTimeout(() => closeMenu(), 80);
+    }, [toggleLanguage, closeMenu]);
+
     React.useEffect(() => {
         if (!closeOnClickAway || !open) return;
 
@@ -519,8 +527,28 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                                 )}
                             </div>
 
+                            {/* ── Language switcher ── */}
+                            <div className="mt-auto pt-6">
+                                <div className="h-px bg-white/10 mb-5" />
+                                <div className="flex items-center gap-2 px-2">
+                                    {(['en', 'ro'] as const).map((lang) => (
+                                        <button
+                                            key={lang}
+                                            onClick={lang !== language ? handleLanguageToggle : undefined}
+                                            className={`px-4 py-2 rounded-full font-jakarta text-[11px] tracking-[1.5px] uppercase transition-all duration-200 border ${
+                                                language === lang
+                                                    ? 'bg-white text-black border-white'
+                                                    : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10 hover:text-white/70 cursor-pointer'
+                                            }`}
+                                        >
+                                            {lang}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             {displaySocials && socialItems && socialItems.length > 0 && (
-                                <div className="sm-socials mt-auto pt-8 flex flex-col gap-3" aria-label="Social links">
+                                <div className="sm-socials pt-6 flex flex-col gap-3" aria-label="Social links">
                                     <h3 className="sm-socials-title m-0 text-base font-medium [color:var(--sm-accent,#ff0000)]">Socials</h3>
                                     <ul
                                         className="sm-socials-list list-none m-0 p-0 flex flex-row items-center gap-4 flex-wrap"
