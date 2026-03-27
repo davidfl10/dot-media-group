@@ -16,6 +16,16 @@ import { NextResponse } from "next/server";
 const NOTION_TOKEN = process.env.NOTION_SECRET!;
 const DATABASE_ID  = process.env.NOTION_PARTNERS_DATABASE_ID!;
 
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "https://dotmg.eu",
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 function extractFileUrls(files: any[]): string[] {
   if (!Array.isArray(files)) return [];
   return files
@@ -96,5 +106,5 @@ export async function GET() {
     };
   });
 
-  return NextResponse.json({ partners });
+  return NextResponse.json({ partners }, { headers: CORS_HEADERS });
 }

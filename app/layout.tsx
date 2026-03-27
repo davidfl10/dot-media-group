@@ -37,8 +37,46 @@ export const frauncesItalicFont = localFont({
   display: "swap",
 });
 
-const metadata: Metadata = {
-  title: "DOT Media Group",
+export const metadata: Metadata = {
+  metadataBase: new URL("https://dotmg.eu"),
+  title: {
+    default: "DOT Media Group — Digital Agency",
+    template: "%s | DOT Media Group",
+  },
+  description:
+    "DOT Media Group is a digital agency specializing in video production, branding, and digital marketing. We help brands tell their story through compelling visuals.",
+  keywords: [
+    "digital agency moldova",
+    "video production",
+    "branding",
+    "digital marketing",
+    "DOT Media Group",
+  ],
+  authors: [{ name: "DOT Media Group" }],
+  creator: "DOT Media Group",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    alternateLocale: "ro_RO",
+    url: "https://dotmg.eu",
+    siteName: "DOT Media Group",
+    title: "DOT Media Group — Creative Agency",
+    description:
+      "Creative agency specializing in video production, branding, and digital marketing.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "DOT Media Group — Creative Agency",
+    description:
+      "Creative agency specializing in video production, branding, and digital marketing.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "https://dotmg.eu",
+  },
 };
 
 export default function RootLayout({
