@@ -47,6 +47,7 @@ export const metadata: Metadata = {
     "DOT Media Group is a digital agency specializing in video production, branding, and digital marketing. We help brands tell their story through compelling visuals.",
   keywords: [
     "digital agency moldova",
+    "agentie de marketing moldova",
     "video production",
     "branding",
     "digital marketing",
