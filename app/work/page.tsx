@@ -38,14 +38,22 @@ function ProjectCard({ partner, index, className }: {
         return () => mq.removeEventListener("change", handler);
     }, []);
 
-    // Loose inView — just used to lazy-load the src before the card is visible
-    const nearView = useInView(ref, { once: true, margin: "200px 0px 200px 0px" });
+    // Loose inView — start buffering well before the card is visible
+    const nearView = useInView(ref, { once: true, margin: "800px 0px 800px 0px" });
     // Tight inView — only fires when the card is roughly centered on screen (mobile)
     const centeredInView = useInView(ref, { once: false, margin: "-38% 0px -38% 0px" });
 
-    // Lazy-load src as card approaches viewport
+    // Lazy-load src and start buffering as card approaches viewport
     useEffect(() => {
-        if (nearView) setSrcLoaded(true);
+        if (nearView) {
+            setSrcLoaded(true);
+            // On next frame (after src is set), kick off buffering
+            requestAnimationFrame(() => {
+                if (videoRef.current) {
+                    videoRef.current.load();
+                }
+            });
+        }
     }, [nearView]);
 
     // Mobile: play only the centered video
@@ -100,7 +108,7 @@ function ProjectCard({ partner, index, className }: {
                     <video
                         ref={videoRef}
                         src={srcLoaded ? partner.mainVideo : undefined}
-                        preload={isDesktop ? "metadata" : "none"}
+                        preload={srcLoaded ? "auto" : (isDesktop ? "metadata" : "none")}
                         muted
                         loop
                         playsInline
