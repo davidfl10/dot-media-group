@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { getPartners, Partner, toPartnerSlug } from "@/lib/notion";
 import { useLoading } from "@/context/LoadingContext";
 import { useTranslation } from "@/lib/useTranslation";
@@ -16,17 +16,16 @@ import playIcon from "@/public/icons/play-icon.svg";
 
 
 
-function ProjectCard({ partner, index, className, preloaded = false }: {
+function ProjectCard({ partner, index, className }: {
     partner: Partner;
     index: number;
     className?: string;
-    preloaded?: boolean;
 }) {
     const t = useTranslation("work");
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hovered, setHovered] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [srcLoaded, setSrcLoaded] = useState(preloaded);
+    const [srcLoaded, setSrcLoaded] = useState(false);
     const [isDesktop, setIsDesktop] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -101,6 +100,7 @@ function ProjectCard({ partner, index, className, preloaded = false }: {
                     <video
                         ref={videoRef}
                         src={srcLoaded ? partner.mainVideo : undefined}
+                        preload={isDesktop ? "metadata" : "none"}
                         muted
                         loop
                         playsInline
@@ -161,8 +161,6 @@ export default function Work() {
     const t = useTranslation("work");
     const { registerLoading } = useLoading();
     const [partners, setPartners] = useState<Partner[]>([]);
-    const [loadProgress, setLoadProgress] = useState(0);
-    const [videosReady, setVideosReady] = useState(false);
     const heroRef = useRef(null);
     const heroInView = useInView(heroRef, { once: true });
 
@@ -181,74 +179,8 @@ export default function Work() {
         });
     }, [partnersPromise]);
 
-    // Preload all mainVideos once partners are fetched
-    useEffect(() => {
-        if (partners.length === 0) return;
-
-        const urls = partners.map((p) => p.mainVideo).filter(Boolean) as string[];
-        if (urls.length === 0) { setVideosReady(true); return; }
-
-        let loaded = 0;
-        const total = urls.length;
-        const settled = new Set<number>();
-
-        const advance = (i: number) => {
-            if (settled.has(i)) return;
-            settled.add(i);
-            loaded++;
-            setLoadProgress(Math.round((loaded / total) * 100));
-            if (loaded >= total) setVideosReady(true);
-        };
-
-        urls.forEach((url, i) => {
-            const vid = document.createElement("video");
-            vid.preload = "auto";
-            vid.muted = true;
-            vid.src = url;
-            vid.addEventListener("canplaythrough", () => advance(i), { once: true });
-            vid.addEventListener("error", () => advance(i), { once: true });
-            // Hard timeout — don't block forever on slow connections
-            setTimeout(() => advance(i), 12000);
-            vid.load();
-        });
-    }, [partners]);
-
     return (
         <>
-            {/* ── Video preload loading screen ── */}
-            <AnimatePresence>
-                {(!videosReady || partners.length === 0) && (
-                    <motion.div
-                        key="preloader"
-                        initial={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        className="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center gap-10"
-                    >
-                        <motion.p
-                            initial={{ opacity: 0, y: 8 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="font-jakarta text-[10px] tracking-[3px] uppercase text-white/30 font-light"
-                        >
-                            {t.loadingLabel}
-                        </motion.p>
-
-                        {/* Progress bar */}
-                        <div className="w-[200px] md:w-[280px] h-px bg-white/10 relative overflow-hidden">
-                            <motion.div
-                                className="absolute inset-y-0 left-0 bg-white/60"
-                                style={{ width: `${loadProgress}%` }}
-                                transition={{ duration: 0.3, ease: "easeOut" }}
-                            />
-                        </div>
-
-                        <span className="font-fraunces text-[clamp(52px,8vw,90px)] font-light tracking-[-2px] text-white/90 tabular-nums leading-none">
-                            {loadProgress}<span className="text-white/30 text-[0.5em]">%</span>
-                        </span>
-                    </motion.div>
-                )}
-            </AnimatePresence>
 
             {/* ── Hero ── */}
             < section
@@ -314,10 +246,10 @@ export default function Work() {
                                     {c(0) && (
                                         <div className="flex flex-col lg:flex-row items-start gap-5">
                                             <div className="w-full h-[500px] lg:w-[55%] lg:h-[620px]">
-                                                {c(0) && <ProjectCard partner={c(0)} index={base + 0} preloaded={videosReady} />}
+                                                {c(0) && <ProjectCard partner={c(0)} index={base + 0} />}
                                             </div>
                                             <div className="w-full h-[500px] lg:w-[45%] lg:h-[480px] lg:mt-[80px]">
-                                                {c(1) && <ProjectCard partner={c(1)} index={base + 1} preloaded={videosReady} />}
+                                                {c(1) && <ProjectCard partner={c(1)} index={base + 1} />}
                                             </div>
                                         </div>
                                     )}
@@ -325,7 +257,7 @@ export default function Work() {
                                     {/* Row 2: 70% width, h-[500px], centered */}
                                     {c(2) && (
                                         <div className="w-full h-[500px] lg:w-[80%] lg:h-[676px] mx-auto">
-                                            <ProjectCard partner={c(2)} index={base + 2} preloaded={videosReady} />
+                                            <ProjectCard partner={c(2)} index={base + 2} />
                                         </div>
                                     )}
 
@@ -333,10 +265,10 @@ export default function Work() {
                                     {c(3) && (
                                         <div className="flex flex-col lg:flex-row items-start gap-5">
                                             <div className="w-full h-[500px] lg:w-[45%] lg:h-[540px]">
-                                                {c(3) && <ProjectCard partner={c(3)} index={base + 3} preloaded={videosReady} />}
+                                                {c(3) && <ProjectCard partner={c(3)} index={base + 3} />}
                                             </div>
                                             <div className="w-full h-[500px] lg:w-[55%] lg:h-[680px] lg:mt-[80px]">
-                                                {c(4) && <ProjectCard partner={c(4)} index={base + 4} preloaded={videosReady} />}
+                                                {c(4) && <ProjectCard partner={c(4)} index={base + 4} />}
                                             </div>
                                         </div>
                                     )}
@@ -344,7 +276,7 @@ export default function Work() {
                                     {/* Row 4: 85% width, h-[500px], centered */}
                                     {c(5) && (
                                         <div className="w-full h-[500px] lg:w-[90%] lg:h-[676px] mx-auto">
-                                            <ProjectCard partner={c(5)} index={base + 5} preloaded={videosReady} />
+                                            <ProjectCard partner={c(5)} index={base + 5} />
                                         </div>
                                     )}
 
