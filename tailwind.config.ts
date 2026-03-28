@@ -10,9 +10,9 @@ const config: Config = {
     extend: {
       keyframes: {
         "loading-bar": {
-          "0%":   { width: "0%",  marginLeft: "0%" },
-          "50%":  { width: "60%", marginLeft: "20%" },
-          "100%": { width: "0%",  marginLeft: "100%" },
+          "0%": { width: "0%", marginLeft: "0%" },
+          "50%": { width: "60%", marginLeft: "20%" },
+          "100%": { width: "0%", marginLeft: "100%" },
         },
       },
       animation: {

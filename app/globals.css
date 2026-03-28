@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant limitedHeight (@media (height <= 800px) and (width >= 1024px));
 
 @theme inline {
   --color-background: var(--background);
@@ -56,6 +57,10 @@
 @keyframes logo-breathe {
   0%, 100% { opacity: 0.6; transform: scale(1);    }
   50%       { opacity: 1;   transform: scale(1.04); }
+}
+
+@media (max-height: 800px) {
+  .hero-heading { font-size: clamp(75px, 10vh, 135px); }
 }
 
 :root {

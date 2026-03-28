@@ -120,10 +120,10 @@ export default function Home() {
           </h3>
           <h3 className="md:hidden" />
           <div className="flex flex-col items-end lg:items-start justify-center lg:justify-start">
-            <h1 className="text-center lg:text-start self-stretch font-fraunces text-[40px] md:text-[80px] lg:text-[135px] font-normal leading-11 md:leading-20 lg:leading-32 tracking-[-0.8px] lg:tracking-[-2.8px] bg-gradient-to-t from-[#535353] to-white bg-clip-text text-transparent">
+            <h1 className="text-center lg:text-start self-stretch font-fraunces text-[40px] md:text-[80px] lg:text-[120px] limitedHeight:text-[75px] limitedHeight:leading-20 font-normal leading-11 md:leading-20 lg:leading-32 tracking-[-0.8px] lg:tracking-[-2.8px] bg-gradient-to-t from-[#535353] to-white bg-clip-text text-transparent">
               {t.heroHeading1}
             </h1>
-            <h1 className="relative lg:ml-10 font-fraunces-italic text-[40px] md:text-[80px] lg:text-[135px] font-normal leading-11 md:leading-20 lg:leading-32 tracking-[-0.8px] lg:tracking-[-2.8px] bg-gradient-to-t from-[#535353] to-white bg-clip-text text-transparent">
+            <h1 className="relative lg:ml-10 font-fraunces-italic text-[40px] md:text-[75px] lg:text-[120px] limitedHeight:text-[75px] limitedHeight:leading-24 font-normal leading-11 md:leading-24 lg:leading-36 tracking-[-0.8px] lg:tracking-[-2.8px] bg-gradient-to-t from-[#535353] to-white bg-clip-text text-transparent">
               {t.heroHeading2}
             </h1>
           </div>
@@ -138,14 +138,14 @@ export default function Home() {
 
 
 
-      <section className="h-screen w-screen max-w-[1008px]">
+      <section className="min-h-screen w-screen max-w-[1008px]">
         <ScrollReveal
           baseOpacity={0.3}
           enableBlur
           baseRotation={2}
           blurStrength={9}
           scrubSpeed={5}
-          containerClassName="h-full w-full flex flex-col items-center justify-around gap-7 px-3 pt-5 lg:p-0 lg:gap-14"
+          containerClassName="min-h-screen w-full flex flex-col items-center justify-around gap-7 px-3 pt-5 lg:p-0 lg:gap-14"
         >
           {width && width < 1000 && (
             <p>{t.heroDescriptionMobile1}</p>
