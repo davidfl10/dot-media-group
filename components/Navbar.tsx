@@ -10,8 +10,8 @@ import { servicePackages } from '@/lib/servicePackages';
 const Navbar = () => {
   const width = useWindowWidth();
   const { language, toggle } = useLanguage();
-  const logoWidth = width && width > 850 ? 110 : 82;
-  const logoHeight = width && width > 850 ? 40 : 25;
+  const logoWidth = width && width > 850 ? 80 : 82;
+  const logoHeight = width && width > 850 ? 35 : 25;
 
   const domainKeys = Object.keys(servicePackages['en']);
   const serviceSubItems = domainKeys.map((key, i) => ({
@@ -49,7 +49,7 @@ const Navbar = () => {
         <div className='w-full flex items-center justify-center gap-14'>
           <div className='inline-flex p-3 items-center justify-between lg:justify-normal gap-16 rounded-[110px] border-[1px] border-neutral-800 bg-[rgba(14,14,14,0.70)] backdrop-blur-xl'>
             <Link href="/">
-              <Image src={Logo} alt="Logo" width={logoWidth} height={logoHeight} />
+              <Image className='ml-2' src={Logo} alt="Logo" width={logoWidth} height={logoHeight} />
             </Link>
 
             <nav className='flex items-center justify-center'>

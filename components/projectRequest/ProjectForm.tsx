@@ -6,8 +6,16 @@ import { servicePackages } from "@/lib/servicePackages";
 // icons
 import email from "@/public/icons/email.svg";
 
+type RequestFormData = {
+    solution: string;
+    service: string;
+    package: string;
+    details: string;
+    email: string;
+};
+
 interface SuccessScreenProps {
-    data: { solution: string; service: string; package: string; details: string; email: string };
+    data: RequestFormData;
     onNewRequest: () => void;
 }
 
@@ -17,7 +25,7 @@ const SuccessScreen = ({ data, onNewRequest }: SuccessScreenProps) => {
     return (
         <div className="flex flex-col items-center justify-center gap-8 w-full p-8 lg:p-14 rounded-[20px] border-b-2 border-r border-[#E2E8F02E] bg-[#4848481A] backdrop-blur-[19px]">
             <div className="flex flex-col items-center justify-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-[#89CF8033] flex items-center justify-center" style={{boxShadow: 'box-shadow: 0 0 250px 0 rgba(76, 175, 80, 0.30);'}}>
+                <div className="w-16 h-16 rounded-full bg-[#89CF8033] flex items-center justify-center" style={{boxShadow: 'box-shadow: 0 0 250px 0 rgba(76, 175, 80, 0.30)'}}>
                     <svg className="w-8 h-8 text-[#89CF80]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
@@ -62,13 +70,7 @@ const ProjectForm = () => {
 
     const lang = "en";
 
-    const [data, setData] = useState<{
-        solution: string,
-        service: string,
-        package: string,
-        details: string,
-        email: string
-    }>({
+    const [data, setData] = useState<RequestFormData>({
         solution: "",
         service: "",
         package: "",
@@ -77,7 +79,9 @@ const ProjectForm = () => {
     });
 
     const [step, setStep] = useState(1);
-    const [submittedData, setSubmittedData] = useState<null | { solution: string; service: string; package: string; details: string; email: string }>(null);
+    const [submittedData, setSubmittedData] = useState<null | RequestFormData>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
     const handleNextRef = useRef<(() => void) | undefined>(undefined);
 
     // Email validation regex
@@ -86,6 +90,8 @@ const ProjectForm = () => {
     const handleReset = () => {
         setStep(1);
         setSubmittedData(null);
+        setSubmitError(null);
+        setIsSubmitting(false);
         setData({
             solution: "",
             service: "",
@@ -95,6 +101,58 @@ const ProjectForm = () => {
         });
     };
 
+    const handleSubmitRequest = async () => {
+        if (!isEmailValid) {
+            setSubmitError("Please enter a valid email address.");
+            return false;
+        }
+
+        setSubmitError(null);
+        setIsSubmitting(true);
+
+        try {
+            const res = await fetch("/api/requests", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            let payload: unknown = null;
+            try {
+                payload = await res.json();
+            } catch {
+                payload = null;
+            }
+
+            if (!res.ok) {
+                const errorValue =
+                    typeof payload === "object" && payload !== null && "error" in payload
+                        ? (payload as { error?: unknown }).error
+                        : null;
+
+                const backendMessage =
+                    typeof errorValue === "string"
+                        ? errorValue
+                        : typeof errorValue === "object" && errorValue !== null && "message" in errorValue
+                            ? String((errorValue as { message?: unknown }).message ?? "Failed to submit your request. Please try again.")
+                            : "Failed to submit your request. Please try again.";
+
+                setSubmitError(backendMessage);
+                return false;
+            }
+
+            setSubmittedData(data);
+            return true;
+        } catch {
+            setSubmitError("Network error while submitting. Please try again.");
+            return false;
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <div className="flex h-auto w-full items-center justify-center p-10">
             {submittedData ? (
@@ -102,17 +160,19 @@ const ProjectForm = () => {
                     <SuccessScreen data={submittedData} onNewRequest={handleReset} />
                 </div>
             ) : (
-                <Stepper
-                    initialStep={step}
-                    className='w-[356px] lg:w-[640px] text-white'
-                    stepCircleContainerClassName="w-full py-8 px-6 lg:py-12 lg:px-8 rounded-[20px] border-b-[2px] border-r-[1px] border-[#E2E8F02E] bg-[#4848481A] backdrop-blur-[6px]"
-                    onStepChange={(newStep) => setStep(newStep)}
-                    onFinalStepCompleted={() => setSubmittedData(data)}
-                    backButtonText="BACK"
-                    nextButtonText="CONTINUE"
-                    onNextStepRef={(fn) => { handleNextRef.current = fn; }}
-                    isEmailValid={isEmailValid}
-                >
+                <div className="w-full flex-col items-center justify-center gap-8 hidden lg:flex">
+                    <Stepper
+                        initialStep={step}
+                        className='w-[356px] lg:w-[640px] text-white'
+                        stepCircleContainerClassName="w-full py-8 px-6 lg:py-12 lg:px-8 rounded-[20px] border-b-[2px] border-r-[1px] border-[#E2E8F02E] bg-[#4848481A] backdrop-blur-[6px]"
+                        onStepChange={(newStep) => setStep(newStep)}
+                        onFinalStepCompleted={handleSubmitRequest}
+                        backButtonText="BACK"
+                        nextButtonText={isSubmitting ? "SUBMITTING..." : "CONTINUE"}
+                        nextButtonProps={{ disabled: isSubmitting }}
+                        onNextStepRef={(fn) => { handleNextRef.current = fn; }}
+                        isEmailValid={isEmailValid}
+                    >
                 <Step>
                     <h2 className="font-fraunces text-white text-2xl text-center">I. Select a Solution</h2>
                     <p className="font-jakarta text-[16px] text-neutral-400 text-center">Choose the area that best fits your project's needs.</p>
@@ -164,7 +224,7 @@ const ProjectForm = () => {
                                     price={pkg.price}
                                     selected={data.package === pkg.name}
                                     onClick={() => {
-                                        setData({ ...data, package: pkg.name });
+                                        setData({ ...data, package: pkg.name + (pkg.price ? ` - $${pkg.price}` : '') });
                                         if (handleNextRef.current) handleNextRef.current();
                                     }}
                                 />
@@ -198,7 +258,13 @@ const ProjectForm = () => {
                         </div>
                     </div>
                 </Step>
-            </Stepper>
+                    </Stepper>
+                    {submitError && (
+                        <p className="mt-4 max-w-[640px] text-center font-jakarta text-sm text-red-300">
+                            {submitError}
+                        </p>
+                    )}
+                </div>
             )}
         </div>
     )

@@ -10,7 +10,7 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   initialStep?: number;
   onStepChange?: (step: number) => void;
-  onFinalStepCompleted?: () => void;
+  onFinalStepCompleted?: () => void | boolean | Promise<void | boolean>;
   stepCircleContainerClassName?: string;
   stepContainerClassName?: string;
   contentClassName?: string;
@@ -53,6 +53,7 @@ export default function Stepper({
 }: StepperExtendedProps) {
   const [currentStep, setCurrentStep] = useState<number>(initialStep);
   const [direction, setDirection] = useState<number>(0);
+  const [isCompleting, setIsCompleting] = useState<boolean>(false);
   const stepsArray = Children.toArray(children);
   const totalSteps = stepsArray.length;
   const isCompleted = currentStep > totalSteps;
@@ -60,9 +61,7 @@ export default function Stepper({
 
   const updateStep = (newStep: number) => {
     setCurrentStep(newStep);
-    if (newStep > totalSteps) {
-      onFinalStepCompleted();
-    } else {
+    if (newStep <= totalSteps) {
       onStepChange(newStep);
     }
   };
@@ -88,14 +87,28 @@ export default function Stepper({
     }
   }, [onNextStepRef, handleNext]);
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (isCompleting) return;
+
+    setIsCompleting(true);
     setDirection(1);
-    updateStep(totalSteps + 1);
+
+    try {
+      const result = await onFinalStepCompleted();
+      if (result === false) return;
+
+      updateStep(totalSteps + 1);
+    } finally {
+      setIsCompleting(false);
+    }
   };
+
+  const nextButtonDisabledByProps = Boolean(nextButtonProps.disabled);
+  const isNextDisabled = (isLastStep && !isEmailValid) || isCompleting || nextButtonDisabledByProps;
 
   return (
     <div
-      className="flex min-h-full flex-1 flex-col items-center justify-center sm:aspect-[4/3] md:aspect-[2/1]"
+      className="flex min-h-full flex-1 flex-col items-center justify-center sm:aspect-4/3 md:aspect-2/1"
       {...rest}
     >
       <div
@@ -163,10 +176,10 @@ export default function Stepper({
                   onClick={isLastStep ? handleComplete : handleNext}
                   className={
                     "duration-350 w-1/2 lg:w-fit flex items-center justify-center gap-2 rounded-full bg-[#F6E9DA] text-neutral-900 border border-[#FFFFFF14] p-2 lg:px-3 font-medium tracking-tight transition hover:bg-[#F6E9DA] hover:text-neutral-800" +
-                    (isLastStep && !isEmailValid ? " opacity-50 pointer-events-none" : "")
+                    (isNextDisabled ? " opacity-50 pointer-events-none" : "")
                   }
-                  disabled={isLastStep && !isEmailValid}
                   {...nextButtonProps}
+                  disabled={isNextDisabled}
                 >
                   <p className="font-jakarta ml-2 text-xs leading-3 font-normal uppercase tracking-[1.2px]">{nextButtonText}</p>
                   <Image src={arrowRightDarker} alt="Next" width={14} height={14} />
