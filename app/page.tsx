@@ -265,30 +265,6 @@ export default function Home() {
 
       <section id="project-request" className="relative min-h-screen w-screen flex flex-col items-center justify-center mt-10 py-10">
 
-        {/* {width && width > 850 && (
-            <>
-              <div
-                data-us-project="GxA3xsXp539xHAR5y0Qp"
-                className="absolute inset-0 -z-10"
-                data-us-lazyload="true"
-                data-us-production="true"
-              />
-
-
-              <Script
-                src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
-                strategy="afterInteractive"
-                onLoad={() => {
-                  // @ts-ignore
-                  if (window.UnicornStudio && !window.UnicornStudio.isInitialized) {
-                    // @ts-ignore
-                    window.UnicornStudio.init();
-                  }
-                }}
-              />
-            </>
-          )} */}
-
         <div className="h-[20%] max-w-[800px] flex flex-col items-center justify-center gap-6 p-10 mt-[10%]">
           <div className="flex flex-wrap lg:flex-nowrap items-center justify-center gap-x-4 gap-y-2">
             <span className="font-fraunces text-white text-center font-light text-[40px] lg:text-[70px] flex items-center justify-between gap-4">{t.ctaLine1} <span className="font-fraunces-italic text-right">{t.ctaLine1Italic}</span> </span>

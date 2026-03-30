@@ -248,7 +248,7 @@ function SlideTransition({ children, direction, onHeightReady }: SlideTransition
       ref={containerRef}
       custom={direction}
       variants={stepVariants}
-      initial="enter"
+      initial="center"
       animate="center"
       exit="exit"
       transition={{ duration: 0.4 }}
