@@ -6,6 +6,7 @@ import Menu from '@/public/icons/menu.svg';
 import Close from '@/public/icons/close.svg';
 import Arrow from '@/public/icons/chevron.png';
 import Link from 'next/link';
+import { sendGAEvent } from '@next/third-parties/google'
 import { useLanguage } from '@/context/LanguageContext';
 
 export interface StaggeredMenuSubItem {
@@ -378,7 +379,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                         </div>
 
                         <div className="flex items-center justify-center gap-1">
-                            <button className='flex items-center justify-center p-3 rounded-[44px] backdrop-blur-[6px] border-[1px] border-slate-200/20 bg-[linear-gradient(0deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.10)_100%)] hover:bg-slate-200/40 bg-[rgba(255, 255, 255, 0.15)] cursor-pointer backdrop-blur-md transition-colors'>
+                            <button
+                                className='flex items-center justify-center p-3 rounded-[44px] backdrop-blur-[6px] border-[1px] border-slate-200/20 bg-[linear-gradient(0deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.10)_100%)] hover:bg-slate-200/40 bg-[rgba(255, 255, 255, 0.15)] cursor-pointer backdrop-blur-md transition-colors'
+                                onClick={() => sendGAEvent('event', 'buttonClicked', { value: 'Start a project mobile' })}  
+                            >
                                 <Link href="/#project-request" className='text-neutral-50 text-center font-jakarta text-xs leading-[18px] tracking-[1.2px] uppercase font-medium'>Start a project</Link>
                             </button>
 
@@ -535,11 +539,10 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                                         <button
                                             key={lang}
                                             onClick={lang !== language ? handleLanguageToggle : undefined}
-                                            className={`px-4 py-2 rounded-full font-jakarta text-[11px] tracking-[1.5px] uppercase transition-all duration-200 border ${
-                                                language === lang
-                                                    ? 'bg-white text-black border-white'
-                                                    : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10 hover:text-white/70 cursor-pointer'
-                                            }`}
+                                            className={`px-4 py-2 rounded-full font-jakarta text-[11px] tracking-[1.5px] uppercase transition-all duration-200 border ${language === lang
+                                                ? 'bg-white text-black border-white'
+                                                : 'bg-white/5 text-white/40 border-white/10 hover:bg-white/10 hover:text-white/70 cursor-pointer'
+                                                }`}
                                         >
                                             {lang}
                                         </button>

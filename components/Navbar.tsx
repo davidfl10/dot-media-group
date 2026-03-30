@@ -2,6 +2,7 @@ import useWindowWidth from '@/lib/useWindowWidth';
 import Logo from '@/public/logo/white-on-black.svg';
 import Image from 'next/image';
 import Link from 'next/link';
+import { sendGAEvent } from '@next/third-parties/google'
 // components
 import StaggeredMenu from './menu/StagerredMenu';
 import { useLanguage } from '@/context/LanguageContext';
@@ -58,7 +59,10 @@ const Navbar = () => {
               <a href="/contact" className='px-4 py-2 text-neutral-400 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Contact</a>
             </nav>
 
-            <button className='flex items-center justify-center px-4 py-3 rounded-[44px] backdrop-blur-[6px] border-[1px] border-slate-200/20 bg-[linear-gradient(0deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.10)_100%)] hover:bg-slate-200/40 bg-[rgba(255, 255, 255, 0.15)] cursor-pointer backdrop-blur-md transition-colors'>
+            <button 
+              className='flex items-center justify-center px-4 py-3 rounded-[44px] backdrop-blur-[6px] border-[1px] border-slate-200/20 bg-[linear-gradient(0deg,rgba(255,255,255,0.05)_0%,rgba(255,255,255,0.10)_100%)] hover:bg-slate-200/40 bg-[rgba(255, 255, 255, 0.15)] cursor-pointer backdrop-blur-md transition-colors'
+              onClick={() => sendGAEvent('event', 'buttonClicked', { value: 'Start a project desktop' })}
+              >
               <Link href="/#project-request" className='text-neutral-50 text-center font-jakarta text-[12px] leading-[18px] tracking-[1.2px] uppercase font-medium'>Start a project</Link>
             </button>
           </div>
