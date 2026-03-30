@@ -24,6 +24,7 @@ export default function Home() {
   const t = useTranslation("home");
 
   const width = useWindowWidth();
+  const heroAnimationId = width && width > 850 ? "7mGxoWXPFg6nE8JRQwCd" : "Jmd7m6TTBUpICNVq4mLJ";
 
   const services = useServicesInformation().services;
 
@@ -90,7 +91,7 @@ export default function Home() {
         // style={{ backgroundImage: `url(${logoSrc})` }}
       >
         <div
-          data-us-project="NYOE7AACt1mZfgTuFSXp"
+          data-us-project={heroAnimationId}
           className="absolute inset-0 -z-10 w-full h-full"
           data-us-lazyload="true"
           data-us-production="true"
